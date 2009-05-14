@@ -33,6 +33,7 @@ class Format : public KMainWindow
         Format();
         
     private slots:
+        void updateDescription(const QString &filesystem);
         void formatDisk();
         void jobChanged(bool, QString, uint, bool, int, int, QString, double);
         
@@ -40,6 +41,7 @@ class Format : public KMainWindow
         Ui::Format ui;
         QDBusInterface *m_deviceKitInterface;
         QDBusInterface *m_fs;
+        QHash<QString, QString> m_filesystemDescriptions;
         
         void setWidgetsEnabled(bool enabled);
 };

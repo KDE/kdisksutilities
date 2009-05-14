@@ -52,8 +52,20 @@ Format::Format()
     ui.deviceIcon->setPixmap(KIcon("drive-harddisk").pixmap(64, 64));
     ui.deviceInfo->setText(i18n("Device"));
     
+    ui.filesystemComboBox->addItem("ext3");
+    ui.filesystemComboBox->addItem("FAT");
+    m_filesystemDescriptions.insert("ext3", i18n("ext3 filesystem is a Linux filesystem."));
+    m_filesystemDescriptions.insert("FAT", i18n("FAT filesystem is used on Windows/DOS and it is the most common on devices like media players, cameras etc..."));
+    updateDescription(ui.filesystemComboBox->currentText());
+    
+    connect(ui.filesystemComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(updateDescription(const QString &)));
     connect(ui.formatButton, SIGNAL(clicked(bool)), this, SLOT(formatDisk()));
     connect(ui.closeButton, SIGNAL(clicked(bool)), this, SLOT(close()));
+}
+
+void Format::updateDescription(const QString &filesystem)
+{    
+    ui.filesystemDescription->setText(m_filesystemDescriptions[filesystem]);
 }
 
 void Format::formatDisk()
