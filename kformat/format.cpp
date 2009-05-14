@@ -50,7 +50,7 @@ Format::Format()
     }
     
     ui.deviceIcon->setPixmap(KIcon("drive-harddisk").pixmap(64, 64));
-    ui.deviceInfo->setText(i18n("The device is ready."));
+    ui.deviceInfo->setText(i18n("Device"));
     
     connect(ui.formatButton, SIGNAL(clicked(bool)), this, SLOT(formatDisk()));
     connect(ui.closeButton, SIGNAL(clicked(bool)), this, SLOT(close()));
