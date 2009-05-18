@@ -22,9 +22,12 @@
 #include <Solid/Block>
 #include <Solid/Device>
 #include <Solid/DeviceInterface>
+#include <Solid/StorageDrive>
+#include <Solid/StorageVolume>
 
 #include <KDebug>
 #include <KMessageBox>
+#include <KLocale>
 
 #include "blockdeviceutility.h"
 
@@ -38,9 +41,7 @@ Format::Format()
     foreach (const Solid::Device &dev, m_devices){
         ui.deviceComboBox->addItem(dev.as<Solid::Block>()->device());
     }
-    
-    ui.deviceIcon->setPixmap(KIcon("drive-harddisk").pixmap(64, 64));
-    ui.deviceInfo->setText(i18n("Device"));
+    updateDeviceDescription(ui.deviceComboBox->currentText());
     
     ui.filesystemComboBox->addItem("ext3");
     ui.filesystemComboBox->addItem("FAT");
@@ -48,9 +49,26 @@ Format::Format()
     m_filesystemDescriptions.insert("FAT", i18n("FAT filesystem is used on Windows/DOS and it is the most common on devices like media players, cameras etc..."));
     updateDescription(ui.filesystemComboBox->currentText());
     
+    connect(ui.deviceComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(updateDeviceDescription(const QString &)));
     connect(ui.filesystemComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(updateDescription(const QString &)));
     connect(ui.formatButton, SIGNAL(clicked(bool)), this, SLOT(formatDisk()));
     connect(ui.closeButton, SIGNAL(clicked(bool)), this, SLOT(close()));
+}
+
+void Format::updateDeviceDescription(const QString &device)
+{
+   foreach (const Solid::Device &dev, m_devices){
+        if (dev.as<Solid::Block>()->device() == device){
+            if (dev.isDeviceInterface(Solid::DeviceInterface::StorageVolume)){
+                ui.deviceInfo->setText(KGlobal::locale()->formatByteSize(dev.as<Solid::StorageVolume>()->size()) + " " + usageToString(dev.as<Solid::StorageVolume>()->usage()) + "."); //TODO: i18n
+                
+            }else if (dev.isDeviceInterface(Solid::DeviceInterface::StorageDrive)){
+                ui.deviceInfo->setText(dev.product() + " " + busToString(dev.as<Solid::StorageDrive>()->bus()) + " " + driveTypeToString(dev.as<Solid::StorageDrive>()->driveType()) + ".");  //TODO: i18n
+            }
+            
+            ui.deviceIcon->setPixmap(KIcon(dev.icon()).pixmap(64, 64));
+        }
+    }
 }
 
 void Format::updateDescription(const QString &filesystem)
@@ -86,6 +104,132 @@ void Format::jobChanged(bool inProgress, QString, uint, bool, int, int, QString,
         ui.progressBar->setValue((int) d);
 
     kDebug() << "inProgess: " << inProgress << " Percent: " << d << "\n";
+}
+
+QString Format::usageToString(Solid::StorageVolume::UsageType usage)
+{
+    switch (usage){
+        case Solid::StorageVolume::Other:
+            return i18n("other usage");
+                      
+            break;
+            
+        case Solid::StorageVolume::Unused:
+            return i18n("unused volume");
+                      
+            break;
+            
+        case Solid::StorageVolume::FileSystem:
+            return i18n("filesystem");
+                      
+            break;
+            
+        case Solid::StorageVolume::PartitionTable:
+            return i18n("partition table");
+                      
+            break;
+            
+        case Solid::StorageVolume::Raid:
+            return i18n("raid volume");  
+                      
+            break;
+            
+        case Solid::StorageVolume::Encrypted:
+            return i18n("encrypted volume");
+                      
+            break;
+        }
+        
+        return i18n("unknown");
+}
+
+QString Format::busToString(Solid::StorageDrive::Bus bus)
+{
+    switch (bus){
+        case Solid::StorageDrive::Ide:
+            return i18n("IDE");
+
+            break;
+                        
+        case Solid::StorageDrive::Usb:
+            return i18n("USB");
+            
+            break;
+                        
+        case Solid::StorageDrive::Ieee1394:
+            return i18n("IEEE 1394");
+                        
+            break;
+                        
+        case Solid::StorageDrive::Scsi:
+            return i18n("SCSI");
+                        
+            break;
+                        
+        case Solid::StorageDrive::Sata:
+            return i18n("SATA");
+                        
+            break;
+                        
+        case Solid::StorageDrive::Platform:
+            return i18n("platform");
+                        
+            break;
+    }
+    
+    return i18n("unknown");
+}
+
+QString Format::driveTypeToString(Solid::StorageDrive::DriveType driveType)
+{
+    switch (driveType){
+        case Solid::StorageDrive::HardDisk:
+            return i18n("hard disk");
+            
+            break;
+                        
+        case Solid::StorageDrive::CdromDrive:
+            return i18n("cdrom drive");
+                        
+            break;
+                        
+        case Solid::StorageDrive::Floppy:
+            return i18n("floppy disk");
+                        
+            break;
+                        
+        case Solid::StorageDrive::Tape:
+            return i18n("tape");
+                        
+            break;
+                        
+        case Solid::StorageDrive::CompactFlash:
+            return i18n("compact flash");
+                        
+            break;
+
+        case Solid::StorageDrive::MemoryStick:
+            return i18n("memory stick");
+                        
+            break;
+
+        case Solid::StorageDrive::SmartMedia:
+            return i18n("smart media");
+                        
+            break;
+
+        case Solid::StorageDrive::SdMmc:
+            return i18n("sd mmc");
+                        
+            break;
+
+        case Solid::StorageDrive::Xd:
+            return i18n("xd");
+                        
+            break;
+        }
+        
+        return i18n("unknown");
 }
 
 #include "format.moc"

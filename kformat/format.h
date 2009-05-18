@@ -23,6 +23,8 @@
 #include <QDBusInterface>
 
 #include <Solid/Device>
+#include <Solid/StorageVolume>
+#include <Solid/StorageDrive>
 
 #include <KMainWindow>
 #include "ui_format.h"
@@ -35,6 +37,7 @@ class Format : public KMainWindow
         Format();
         
     private slots:
+        void updateDeviceDescription(const QString &filesystem);
         void updateDescription(const QString &filesystem);
         void formatDisk();
         void jobChanged(bool, QString, uint, bool, int, int, QString, double);
@@ -44,6 +47,9 @@ class Format : public KMainWindow
         QHash<QString, QString> m_filesystemDescriptions;
         QList<Solid::Device> m_devices;
         
+        QString driveTypeToString(Solid::StorageDrive::DriveType driveType);
+        QString usageToString(Solid::StorageVolume::UsageType usage);
+        QString busToString(Solid::StorageDrive::Bus bus);
         void setWidgetsEnabled(bool enabled);
 };
 
