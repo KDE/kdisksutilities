@@ -4,12 +4,12 @@ find_package(KDE4 REQUIRED)
 
 include (KDE4Defaults)
 
-set(kformat_SRCS main.cpp format.cpp)
+set(kformat_SRCS main.cpp format.cpp blockdeviceutility.cpp)
 
 kde4_add_ui_files(kformat_SRCS format.ui )
 
 kde4_add_executable(kformat ${kformat_SRCS})
 
-target_link_libraries(kformat  ${KDE4_KDEUI_LIBS} )
+target_link_libraries(kformat  ${KDE4_KDEUI_LIBS} ${KDE4_SOLID_LIBS})
 
 install(TARGETS kformat  ${INSTALL_TARGETS_DEFAULT_ARGS} )

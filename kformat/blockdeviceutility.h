@@ -1,4 +1,4 @@
-/***************************************************************************
+ /***************************************************************************
  *   Copyright 2009 by Davide Bettio <davide.bettio@kdemail.net>           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,34 +17,29 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef FORMAT_H
-#define FORMAT_H
+#ifndef BLOCKDEVICEUTILITY_H
+#define BLOCKDEVICEUTILITY_H
 
 #include <QDBusInterface>
 
-#include <Solid/Device>
+namespace Solid
+{
+    class Device;
+}
 
-#include <KMainWindow>
-#include "ui_format.h"
-
-class Format : public KMainWindow
+class BlockDeviceUtility : public QObject
 {
     Q_OBJECT
         
     public:
-        Format();
+        BlockDeviceUtility(const Solid::Device &dev);
+        void format(QString filesystem, QStringList params);
         
     private slots:
-        void updateDescription(const QString &filesystem);
-        void formatDisk();
         void jobChanged(bool, QString, uint, bool, int, int, QString, double);
         
     private:
-        Ui::Format ui;
-        QHash<QString, QString> m_filesystemDescriptions;
-        QList<Solid::Device> m_devices;
-        
-        void setWidgetsEnabled(bool enabled);
+        QDBusInterface *m_deviceInterface;
 };
 
 #endif

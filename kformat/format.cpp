@@ -19,15 +19,14 @@
 
 #include "format.h"
 
-#include <QDBusConnection>
-#include <QDBusReply>
-#include <QDBusObjectPath>
-#include <QList>
+#include <Solid/Block>
+#include <Solid/Device>
+#include <Solid/DeviceInterface>
 
 #include <KDebug>
 #include <KMessageBox>
 
-typedef QList<QDBusObjectPath> ObjectPathList;
+#include "blockdeviceutility.h"
 
 Format::Format()
 {
@@ -35,18 +34,9 @@ Format::Format()
     ui.setupUi(mainWidget);
     setCentralWidget(mainWidget);
 
-    m_deviceKitInterface = new QDBusInterface("org.freedesktop.DeviceKit.Disks", "/", "", QDBusConnection::systemBus());
-    if (!m_deviceKitInterface->isValid()){
-        KMessageBox::error(this, i18n("DeviceKit isn't running"));
-    }
-        
-    QDBusReply<ObjectPathList> deviceKitReplyReply = m_deviceKitInterface->call("EnumerateDevices");
-    if (!deviceKitReplyReply.isValid()){
-        KMessageBox::error(this, i18n("Cannot enumerate devices"));
-    }
-        
-    for (int i = 0; i < deviceKitReplyReply.value().size(); i++){
-        ui.deviceComboBox->addItem(deviceKitReplyReply.value().at(i).path());
+    m_devices = Solid::Device::listFromType(Solid::DeviceInterface::Block, QString());
+    foreach (const Solid::Device &dev, m_devices){
+        ui.deviceComboBox->addItem(dev.as<Solid::Block>()->device());
     }
     
     ui.deviceIcon->setPixmap(KIcon("drive-harddisk").pixmap(64, 64));
@@ -70,12 +60,14 @@ void Format::updateDescription(const QString &filesystem)
 
 void Format::formatDisk()
 {
-    m_fs = new QDBusInterface("org.freedesktop.DeviceKit.Disks", ui.deviceComboBox->currentText(), "", QDBusConnection::systemBus());
-    connect(m_fs, SIGNAL(JobChanged(bool, QString, uint, bool, int, int, QString, double)), this, SLOT(jobChanged(bool, QString, uint, bool, int, int, QString, double)));
-    if (!m_fs->isValid()){
-        KMessageBox::error(this, i18n("DeviceKit isn't running"));
+   foreach (const Solid::Device &dev, m_devices){
+        if (dev.as<Solid::Block>()->device() == ui.deviceComboBox->currentText()){
+            BlockDeviceUtility util(dev);
+            util.format(ui.filesystemComboBox->currentText(), QStringList() << "label=" + ui.labelLineEdit->text());
+
+            return;
+        }
     }
-    m_fs->asyncCall("FilesystemCreate", ui.filesystemComboBox->currentText(), QStringList() << "label=" + ui.labelLineEdit->text());
 }
 
 void Format::setWidgetsEnabled(bool enabled)
