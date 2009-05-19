@@ -51,6 +51,9 @@ void BlockDeviceUtility::format(QString filesystem, QStringList params)
 
 void BlockDeviceUtility::jobChanged(bool inProgress, QString, uint, bool, int, int, QString, double d)
 {
+    if (!inProgress)
+        emit jobCompleted(true);
+
     kDebug() << "inProgess: " << inProgress << " Percent: " << d << "\n";
 }
 

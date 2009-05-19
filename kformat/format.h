@@ -27,7 +27,9 @@
 #include <Solid/StorageDrive>
 
 #include <KMainWindow>
+
 #include "ui_format.h"
+#include "blockdeviceutility.h"
 
 class Format : public KMainWindow
 {
@@ -40,12 +42,13 @@ class Format : public KMainWindow
         void updateDeviceDescription(const QString &filesystem);
         void updateDescription(const QString &filesystem);
         void formatDisk();
-        void jobChanged(bool, QString, uint, bool, int, int, QString, double);
-        
+        void jobCompleted(bool success);
+
     private:
         Ui::Format ui;
         QHash<QString, QString> m_filesystemDescriptions;
         QList<Solid::Device> m_devices;
+        BlockDeviceUtility *m_util;
         
         QString driveTypeToString(Solid::StorageDrive::DriveType driveType);
         QString usageToString(Solid::StorageVolume::UsageType usage);

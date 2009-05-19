@@ -29,10 +29,10 @@
 #include <KMessageBox>
 #include <KLocale>
 
-#include "blockdeviceutility.h"
-
 Format::Format()
 {
+    m_util = 0;
+    
     QWidget *mainWidget = new QWidget(this);
     ui.setupUi(mainWidget);
     setCentralWidget(mainWidget);
@@ -80,8 +80,11 @@ void Format::formatDisk()
 {
    foreach (const Solid::Device &dev, m_devices){
         if (dev.as<Solid::Block>()->device() == ui.deviceComboBox->currentText()){
-            BlockDeviceUtility util(dev);
-            util.format(ui.filesystemComboBox->currentText(), QStringList() << "label=" + ui.labelLineEdit->text());
+            delete m_util;
+            m_util = new BlockDeviceUtility(dev);
+            connect(m_util, SIGNAL(jobCompleted(bool)), this, SLOT(jobCompleted(bool)));
+            setWidgetsEnabled(false);
+            m_util->format(ui.filesystemComboBox->currentText(), QStringList() << "label=" + ui.labelLineEdit->text());
 
             return;
         }
@@ -94,16 +97,9 @@ void Format::setWidgetsEnabled(bool enabled)
     ui.progressBar->setEnabled(!enabled);
 }
 
-void Format::jobChanged(bool inProgress, QString, uint, bool, int, int, QString, double d)
+void Format::jobCompleted(bool error)
 {
-    if (centralWidget()->isEnabled() != !inProgress){
-        setWidgetsEnabled(!inProgress);
-    }
-    
-    if (d >= 0);
-        ui.progressBar->setValue((int) d);
-
-    kDebug() << "inProgess: " << inProgress << " Percent: " << d << "\n";
+    setWidgetsEnabled(true);
 }
 
 QString Format::usageToString(Solid::StorageVolume::UsageType usage)
