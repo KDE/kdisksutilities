@@ -53,10 +53,10 @@ void DiskManager::updateDeviceDescription(const QString &device)
    foreach (const Solid::Device &dev, m_devices){
         if (dev.as<Solid::Block>()->device() == device){
             if (dev.isDeviceInterface(Solid::DeviceInterface::StorageVolume)){
-                ui.deviceInfo->setText(KGlobal::locale()->formatByteSize(dev.as<Solid::StorageVolume>()->size()) + " " + usageToString(dev.as<Solid::StorageVolume>()->usage()) + "."); //TODO: i18n
+                ui.deviceInfo->setText(i18nc("Size and usage of a volume (46,6 GiB filesystem)", "%1 %2.", KGlobal::locale()->formatByteSize(dev.as<Solid::StorageVolume>()->size()), usageToString(dev.as<Solid::StorageVolume>()->usage())));
                 
             }else if (dev.isDeviceInterface(Solid::DeviceInterface::StorageDrive)){
-                ui.deviceInfo->setText(dev.product() + " " + busToString(dev.as<Solid::StorageDrive>()->bus()) + " " + driveTypeToString(dev.as<Solid::StorageDrive>()->driveType()) + ".");  //TODO: i18n
+                ui.deviceInfo->setText(i18nc("product bus driveType (KDE KDEHD42 SCSI hard disk)", "%1 %2 %3.", dev.product(), busToString(dev.as<Solid::StorageDrive>()->bus()), driveTypeToString(dev.as<Solid::StorageDrive>()->driveType())));
             }
             
             ui.deviceIcon->setPixmap(KIcon(dev.icon()).pixmap(64, 64));
