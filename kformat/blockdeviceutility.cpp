@@ -48,12 +48,13 @@ void BlockDeviceUtility::format(QString filesystem, QStringList params)
     m_deviceInterface->asyncCall("FilesystemCreate", filesystem, params);
 }
 
+void BlockDeviceUtility::setLabel(QString label)
+{
+    m_deviceInterface->asyncCall("FilesystemSetLabel", label);
+}
 
 void BlockDeviceUtility::jobChanged(bool inProgress, QString, uint, bool, int, int, QString, double d)
 {
-    if (!inProgress)
-        emit jobCompleted(true);
-
     kDebug() << "inProgess: " << inProgress << " Percent: " << d << "\n";
 }
 
