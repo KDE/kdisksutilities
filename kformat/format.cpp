@@ -41,7 +41,7 @@ Format::Format()
     foreach (const Solid::Device &dev, m_devices){
         ui.deviceComboBox->addItem(dev.as<Solid::Block>()->device());
     }
-    updateDeviceDescription(ui.deviceComboBox->currentText());
+    deviceChanged(ui.deviceComboBox->currentText());
     
     ui.filesystemComboBox->addItem("ext3");
     ui.filesystemComboBox->addItem("FAT");
@@ -49,18 +49,22 @@ Format::Format()
     m_filesystemDescriptions.insert("FAT", i18n("FAT filesystem is used on Windows/DOS and it is the most common on devices like media players, cameras etc..."));
     updateDescription(ui.filesystemComboBox->currentText());
     
-    connect(ui.deviceComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(updateDeviceDescription(const QString &)));
+    connect(ui.deviceComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(deviceChanged(const QString &)));
     connect(ui.filesystemComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(updateDescription(const QString &)));
     connect(ui.formatButton, SIGNAL(clicked(bool)), this, SLOT(formatDisk()));
     connect(ui.closeButton, SIGNAL(clicked(bool)), this, SLOT(close()));
 }
 
-void Format::updateDeviceDescription(const QString &device)
+void Format::deviceChanged(const QString &device)
 {
    foreach (const Solid::Device &dev, m_devices){
         if (dev.as<Solid::Block>()->device() == device){
             if (dev.isDeviceInterface(Solid::DeviceInterface::StorageVolume)){
                 ui.deviceInfo->setText(KGlobal::locale()->formatByteSize(dev.as<Solid::StorageVolume>()->size()) + " " + usageToString(dev.as<Solid::StorageVolume>()->usage()) + "."); //TODO: i18n
+                int fsIndex = ui.filesystemComboBox->findText(dev.as<Solid::StorageVolume>()->fsType());
+                if (fsIndex >= 0){
+                    ui.filesystemComboBox->setCurrentIndex(fsIndex);
+                }
                 
             }else if (dev.isDeviceInterface(Solid::DeviceInterface::StorageDrive)){
                 ui.deviceInfo->setText(dev.product() + " " + busToString(dev.as<Solid::StorageDrive>()->bus()) + " " + driveTypeToString(dev.as<Solid::StorageDrive>()->driveType()) + ".");  //TODO: i18n

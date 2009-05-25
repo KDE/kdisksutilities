@@ -39,7 +39,7 @@ class Format : public KMainWindow
         Format();
         
     private slots:
-        void updateDeviceDescription(const QString &filesystem);
+        void deviceChanged(const QString &filesystem);
         void updateDescription(const QString &filesystem);
         void formatDisk();
         void jobCompleted(bool success);
