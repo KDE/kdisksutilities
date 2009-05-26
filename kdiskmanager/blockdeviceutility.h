@@ -33,8 +33,8 @@ class BlockDeviceUtility : public QObject
         
     public:
         BlockDeviceUtility(const Solid::Device &dev);
-        void format(QString filesystem, QStringList params);
-        void setLabel(QString label);
+        void format(const QString& filesystem, const QStringList& params);
+        void setLabel(const QString& label);
         
     private slots:
         void jobChanged(bool, QString, uint, bool, int, int, QString, double);

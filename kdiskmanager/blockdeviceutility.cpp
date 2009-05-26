@@ -43,12 +43,12 @@ BlockDeviceUtility::BlockDeviceUtility(const Solid::Device &dev)
     connect(m_deviceInterface, SIGNAL(JobChanged(bool, QString, uint, bool, int, int, QString, double)), this, SLOT(jobChanged(bool, QString, uint, bool, int, int, QString, double)));
 }
 
-void BlockDeviceUtility::format(QString filesystem, QStringList params)
+void BlockDeviceUtility::format(const QString& filesystem, const QStringList& params)
 {
     m_deviceInterface->asyncCall("FilesystemCreate", filesystem, params);
 }
 
-void BlockDeviceUtility::setLabel(QString label)
+void BlockDeviceUtility::setLabel(const QString& label)
 {
     m_deviceInterface->asyncCall("FilesystemSetLabel", label);
 }
