@@ -3,6 +3,8 @@ set(KDE_MIN_VERSION 4.2.0)
 find_package(KDE4 REQUIRED)
 
 include (KDE4Defaults)
+include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} )
+
 
 set(kdiskmanager_SRCS main.cpp diskmanager.cpp blockdeviceutility.cpp)
 
