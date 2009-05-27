@@ -53,8 +53,16 @@ void BlockDeviceUtility::setLabel(const QString& label)
     m_deviceInterface->asyncCall("FilesystemSetLabel", label);
 }
 
+void filesystemCheck(QStringList options)
+{
+    m_deviceInterface->asyncCall("FilesystemCheck", options);
+}
+
 void BlockDeviceUtility::jobChanged(bool inProgress, QString, uint, bool, int, int, QString, double d)
 {
+    if (!inProgress)
+        emit jobCompleted(true);
+
     kDebug() << "inProgess: " << inProgress << " Percent: " << d << "\n";
 }
 
