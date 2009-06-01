@@ -33,6 +33,7 @@
 
 DiskManager::DiskManager()
 {
+    m_util = 0;
     QWidget *mainWidget = new QWidget(this);
     ui.setupUi(mainWidget);
     setCentralWidget(mainWidget);
