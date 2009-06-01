@@ -53,7 +53,7 @@ void BlockDeviceUtility::setLabel(QString label)
     m_deviceInterface->asyncCall("FilesystemSetLabel", label);
 }
 
-void filesystemCheck(QStringList options)
+void BlockDeviceUtility::filesystemCheck(QStringList options)
 {
     m_deviceInterface->asyncCall("FilesystemCheck", options);
 }
