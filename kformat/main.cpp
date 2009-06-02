@@ -25,12 +25,12 @@
 
 static const char *version = "v0.0.1";
 static const char description[] = I18N_NOOP("KDE Disk Format Utility");
-static const char text[] = I18N_NOOP("");
+//static const char text[] = I18N_NOOP("");
 static const char homepageUrl[] = "http://www.kde.org/";
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData("kformat", 0, ki18n("Format Disk"), version, ki18n(description), KAboutData::License_GPL, KLocalizedString(), ki18n(text), homepageUrl);
+    KAboutData aboutData("kformat", 0, ki18n("Format Disk"), version, ki18n(description), KAboutData::License_GPL, KLocalizedString(), KLocalizedString(), homepageUrl);
     KCmdLineArgs::init(argc, argv, &aboutData);
     KApplication app;
   
