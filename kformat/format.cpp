@@ -61,7 +61,7 @@ void Format::deviceChanged(const QString &device)
         if (dev.as<Solid::Block>()->device() == device){
             if (dev.isDeviceInterface(Solid::DeviceInterface::StorageVolume)){
                 ui.deviceInfo->setText(i18nc("Size and usage of a volume (46,6 GiB filesystem)", "%1 %2.", KGlobal::locale()->formatByteSize(dev.as<Solid::StorageVolume>()->size()), usageToString(dev.as<Solid::StorageVolume>()->usage())));
-                int fsIndex = ui.filesystemComboBox->findText(dev.as<Solid::StorageVolume>()->fsType());
+                const int fsIndex = ui.filesystemComboBox->findText(dev.as<Solid::StorageVolume>()->fsType());
                 if (fsIndex >= 0){
                     ui.filesystemComboBox->setCurrentIndex(fsIndex);
                 }
@@ -106,7 +106,7 @@ void Format::jobCompleted(bool error)
     setWidgetsEnabled(true);
 }
 
-QString Format::usageToString(Solid::StorageVolume::UsageType usage)
+QString Format::usageToString(Solid::StorageVolume::UsageType usage) const
 {
     switch (usage){
         case Solid::StorageVolume::Other:
@@ -143,7 +143,7 @@ QString Format::usageToString(Solid::StorageVolume::UsageType usage)
         return i18n("unknown");
 }
 
-QString Format::busToString(Solid::StorageDrive::Bus bus)
+QString Format::busToString(Solid::StorageDrive::Bus bus) const
 {
     switch (bus){
         case Solid::StorageDrive::Ide:
@@ -180,7 +180,7 @@ QString Format::busToString(Solid::StorageDrive::Bus bus)
     return i18n("unknown");
 }
 
-QString Format::driveTypeToString(Solid::StorageDrive::DriveType driveType)
+QString Format::driveTypeToString(Solid::StorageDrive::DriveType driveType) const
 {
     switch (driveType){
         case Solid::StorageDrive::HardDisk:

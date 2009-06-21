@@ -50,9 +50,9 @@ class Format : public KMainWindow
         QList<Solid::Device> m_devices;
         BlockDeviceUtility *m_util;
         
-        QString driveTypeToString(Solid::StorageDrive::DriveType driveType);
-        QString usageToString(Solid::StorageVolume::UsageType usage);
-        QString busToString(Solid::StorageDrive::Bus bus);
+        QString driveTypeToString(Solid::StorageDrive::DriveType driveType) const;
+        QString usageToString(Solid::StorageVolume::UsageType usage) const;
+        QString busToString(Solid::StorageDrive::Bus bus) const;
         void setWidgetsEnabled(bool enabled);
 };
 
