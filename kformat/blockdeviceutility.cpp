@@ -17,12 +17,13 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
- #include "blockdeviceutility.h"
- 
- 
+#include "blockdeviceutility.h"
+
 #include <QDBusConnection>
-#include <QDBusReply>
 #include <QDBusObjectPath>
+#include <QDBusPendingCall>
+#include <QDBusPendingCallWatcher>
+#include <QDBusReply>
 
 #include <Solid/Block>
 #include <Solid/Device>
@@ -33,6 +34,7 @@
 BlockDeviceUtility::BlockDeviceUtility(const Solid::Device &dev)
 {
     QDBusInterface deviceKitInterface("org.freedesktop.DeviceKit.Disks", "/", "", QDBusConnection::systemBus());
+    watcher = 0;
     
     QDBusReply<QDBusObjectPath> deviceKitReply = deviceKitInterface.call("FindDeviceByDeviceFile", dev.as<Solid::Block>()->device());
     if (!deviceKitReply.isValid()){
@@ -51,25 +53,37 @@ BlockDeviceUtility::~BlockDeviceUtility()
 
 void BlockDeviceUtility::format(const QString &filesystem, const QStringList& params)
 {
-    m_deviceInterface->asyncCall("FilesystemCreate", filesystem, params);
+    QDBusPendingCall pcall = m_deviceInterface->asyncCall("FilesystemCreate", filesystem, params);
 }
 
 void BlockDeviceUtility::setLabel(const QString& label)
 {
-    m_deviceInterface->asyncCall("FilesystemSetLabel", label);
+    QDBusPendingCall pcall = m_deviceInterface->asyncCall("FilesystemSetLabel", label);
 }
 
 void BlockDeviceUtility::filesystemCheck(const QStringList& options)
 {
-    m_deviceInterface->asyncCall("FilesystemCheck", options);
+     delete watcher;
+     QDBusPendingCall pcall = m_deviceInterface->asyncCall("FilesystemCheck", options);
+     watcher = new QDBusPendingCallWatcher(pcall, this);
+     
+     QObject::connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(callFinished(QDBusPendingCallWatcher*)));
 }
 
 void BlockDeviceUtility::jobChanged(bool inProgress, QString, uint, bool, int, int, QString, double d)
 {
+/*
     if (!inProgress)
         emit jobCompleted(true);
+*/
 
     kDebug() << "inProgess: " << inProgress << " Percent: " << d << "\n";
+}
+
+void BlockDeviceUtility::callFinished(QDBusPendingCallWatcher *watcher)
+{
+    QDBusPendingReply<void> reply = *watcher;
+    emit jobCompleted(reply.isError());
 }
 
 #include "blockdeviceutility.moc"
