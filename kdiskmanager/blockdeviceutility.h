@@ -21,6 +21,7 @@
 #define BLOCKDEVICEUTILITY_H
 
 #include <QDBusInterface>
+#include <QDBusPendingCallWatcher>
 
 namespace Solid
 {
@@ -33,18 +34,21 @@ class BlockDeviceUtility : public QObject
         
     public:
         BlockDeviceUtility(const Solid::Device &dev);
-        void format(const QString& filesystem, const QStringList& params);
+	~BlockDeviceUtility();
+        void format(const QString &filesystem, const QStringList& params);
         void setLabel(const QString& label);
-        void filesystemCheck(QStringList options);
+        void filesystemCheck(const QStringList& options);
     
     signals:
         void jobCompleted(bool success);
         
     private slots:
+        void callFinished(QDBusPendingCallWatcher *);
         void jobChanged(bool, QString, uint, bool, int, int, QString, double);
         
     private:
         QDBusInterface *m_deviceInterface;
+        QDBusPendingCallWatcher *watcher;
 };
 
 #endif
