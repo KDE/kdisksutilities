@@ -23,6 +23,9 @@
 #include <QDBusInterface>
 #include <QDBusPendingCallWatcher>
 
+#include "OrgFreedesktopDeviceKitDisks.h"
+#include "OrgFreedesktopDeviceKitDisksDevice.h"
+
 namespace Solid
 {
     class Device;
@@ -44,11 +47,10 @@ class BlockDeviceUtility : public QObject
         
     private slots:
         void callFinished(QDBusPendingCallWatcher *);
-        void jobChanged(bool, QString, uint, bool, int, int, QString, double);
+        void jobChanged(bool jobinprogress, bool jobiscancellable, const QString &jobid, uint jobinitiatedbyuid, double jobpercentage);
         
     private:
-        QDBusInterface *m_deviceInterface;
-        QDBusPendingCallWatcher *watcher;
+        OrgFreedesktopDeviceKitDisksDeviceInterface *m_deviceInterface;
 };
 
 #endif
