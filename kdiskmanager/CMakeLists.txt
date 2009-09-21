@@ -6,7 +6,7 @@ include (KDE4Defaults)
 include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} )
 
 
-set(kdiskmanager_SRCS main.cpp diskmanager.cpp blockdeviceutility.cpp)
+set(kdiskmanager_SRCS main.cpp diskmanager.cpp blockdeviceutility.cpp OrgFreedesktopDeviceKitDisks.cpp OrgFreedesktopDeviceKitDisksDevice.cpp)
 
 kde4_add_ui_files(kdiskmanager_SRCS diskmanager.ui )
 

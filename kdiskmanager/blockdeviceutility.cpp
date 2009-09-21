@@ -21,7 +21,7 @@
 
 #include <QDBusConnection>
 #include <QDBusObjectPath>
-#include <QDBusPendingCall>
+#include <QDBusPendingReply>
 #include <QDBusPendingCallWatcher>
 #include <QDBusReply>
 
@@ -33,57 +33,67 @@
 
 BlockDeviceUtility::BlockDeviceUtility(const Solid::Device &dev)
 {
-    QDBusInterface deviceKitInterface("org.freedesktop.DeviceKit.Disks", "/", "", QDBusConnection::systemBus());
-    watcher = 0;
-    
-    QDBusReply<QDBusObjectPath> deviceKitReply = deviceKitInterface.call("FindDeviceByDeviceFile", dev.as<Solid::Block>()->device());
-    if (!deviceKitReply.isValid()){
-        kDebug() << "Cannot enumerate devices" << "\n";
-    }
+    OrgFreedesktopDeviceKitDisksInterface disks("org.freedesktop.DeviceKit.Disks", "/org/freedesktop/DeviceKit/Disks", QDBusConnection::systemBus(), this);
 
-    m_deviceInterface = new QDBusInterface("org.freedesktop.DeviceKit.Disks", deviceKitReply.value().path(), "", QDBusConnection::systemBus());
-    connect(m_deviceInterface, SIGNAL(JobChanged(bool, QString, uint, bool, int, int, QString, double)), this, SLOT(jobChanged(bool, QString, uint, bool, int, int, QString, double)));
+    kDebug() << "Connected to DevKit-disks version: " << disks.daemonVersion();
+
+    QDBusPendingReply<QDBusObjectPath> deviceKitReply = disks.FindDeviceByDeviceFile(dev.as<Solid::Block>()->device());
+    deviceKitReply.waitForFinished();
+    if (deviceKitReply.isError()){
+        kDebug() << "Cannot enumerate devices" << "\n";
+        return;
+    }
+    
+    m_deviceInterface = new OrgFreedesktopDeviceKitDisksDeviceInterface("org.freedesktop.DeviceKit.Disks", deviceKitReply.value().path(), QDBusConnection::systemBus(), this);
+    connect(m_deviceInterface, SIGNAL(JobChanged(bool, bool, const QString &, uint, double)), this, SLOT(jobChanged(bool, bool, const QString &, uint, double)));
 }
 
 
 BlockDeviceUtility::~BlockDeviceUtility()
 {
-    delete m_deviceInterface;
 }
 
 void BlockDeviceUtility::format(const QString &filesystem, const QStringList& params)
 {
-    QDBusPendingCall pcall = m_deviceInterface->asyncCall("FilesystemCreate", filesystem, params);
+    m_deviceInterface->FilesystemCreate(filesystem, params);
 }
 
 void BlockDeviceUtility::setLabel(const QString& label)
 {
-    QDBusPendingCall pcall = m_deviceInterface->asyncCall("FilesystemSetLabel", label);
+    kDebug() << "New label: " << label << "\n";
+    QDBusPendingReply<> reply = m_deviceInterface->FilesystemSetLabel(label);
+    reply.waitForFinished();
+    kDebug() << "Errore: " << reply.isError() << "\n";
+    kDebug() << reply.error().message() << "\n";
 }
 
 void BlockDeviceUtility::filesystemCheck(const QStringList& options)
 {
+#if 0
      delete watcher;
      QDBusPendingCall pcall = m_deviceInterface->asyncCall("FilesystemCheck", options);
      watcher = new QDBusPendingCallWatcher(pcall, this);
      
      QObject::connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(callFinished(QDBusPendingCallWatcher*)));
+#endif
 }
 
-void BlockDeviceUtility::jobChanged(bool inProgress, QString, uint, bool, int, int, QString, double d)
+void BlockDeviceUtility::jobChanged(bool jobinprogress, bool jobiscancellable, const QString &jobid, uint jobinitiatedbyuid, double jobpercentage)
 {
 /*
     if (!inProgress)
         emit jobCompleted(true);
 */
 
-    kDebug() << "inProgess: " << inProgress << " Percent: " << d << "\n";
+    kDebug() << "inProgess: " << jobinprogress << " Percent: " << jobpercentage << "\n";
 }
 
 void BlockDeviceUtility::callFinished(QDBusPendingCallWatcher *watcher)
 {
+#if 0 
     QDBusPendingReply<void> reply = *watcher;
     emit jobCompleted(reply.isError());
+#endif
 }
 
 #include "blockdeviceutility.moc"
