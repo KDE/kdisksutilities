@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KDEDModule
+X-KDE-Library=disksdaemon
+X-KDE-DBus-ModuleName=disksdaemon
+X-KDE-Kded-autoload=true
+X-KDE-Kded-load-on-demand=false
+X-KDE-Kded-phase=1
+
+Name=DisksDaemon
+
+Comment=Disks Daemon
+

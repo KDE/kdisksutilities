@@ -1,4 +1,4 @@
-/***************************************************************************
+ /***************************************************************************
  *   Copyright 2009 by Davide Bettio <davide.bettio@kdemail.net>           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,43 +17,43 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef FORMAT_H
-#define FORMAT_H
+#ifndef BLOCKDEVICE_H
+#define BLOCKDEVICE_H
 
-#include <QDBusInterface>
+#include <kdemacros.h>
 
-#include <Solid/Device>
-#include <Solid/StorageVolume>
-#include <Solid/StorageDrive>
+#include <QStringList>
 
-#include <KMainWindow>
+namespace Solid
+{
+    class Device;
+}
 
-#include "ui_format.h"
-#include <kdiskmanager/blockdevice.h>
-
-class Format : public KMainWindow
+class KDE_EXPORT BlockDevice : public QObject
 {
     Q_OBJECT
         
     public:
-        Format();
+        BlockDevice(const Solid::Device &dev);
+        BlockDevice(const QString &device);
+        ~BlockDevice();
         
-    private slots:
-        void deviceChanged(const QString &filesystem);
-        void updateDescription(const QString &filesystem);
-        void formatDisk();
-        void jobCompleted(bool success);
+        void format(const QString &filesystem, const QStringList& params);
+        void setLabel(const QString& label);
+        void filesystemCheck(const QStringList& options);
+        QString device();
+        bool isRaid();
+        bool raidIsDegraded();
+        bool raidStatus();
+        int raidLevel();
 
-    private:
-        Ui::Format ui;
-        QHash<QString, QString> m_filesystemDescriptions;
-        QList<Solid::Device> m_devices;
-        BlockDevice *m_util;
         
-        QString driveTypeToString(Solid::StorageDrive::DriveType driveType) const;
-        QString usageToString(Solid::StorageVolume::UsageType usage) const;
-        QString busToString(Solid::StorageDrive::Bus bus) const;
-        void setWidgetsEnabled(bool enabled);
+    signals:
+        void jobCompleted(bool success);
+        
+    private:
+        class Private;
+        Private *d;
 };
 
 #endif

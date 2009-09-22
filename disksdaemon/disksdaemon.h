@@ -1,4 +1,4 @@
-/***************************************************************************
+ /***************************************************************************
  *   Copyright 2009 by Davide Bettio <davide.bettio@kdemail.net>           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,43 +17,31 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef FORMAT_H
-#define FORMAT_H
 
-#include <QDBusInterface>
+#ifndef DISKSDAEMON_H
+#define DISKSDAEMON_H
 
-#include <Solid/Device>
-#include <Solid/StorageVolume>
-#include <Solid/StorageDrive>
+#include <KDEDModule>
+#include <KComponentData>
 
-#include <KMainWindow>
+class BlockDevice;
 
-#include "ui_format.h"
-#include <kdiskmanager/blockdevice.h>
-
-class Format : public KMainWindow
+class KDE_EXPORT DisksDaemon : public KDEDModule
 {
     Q_OBJECT
-        
-    public:
-        Format();
-        
-    private slots:
-        void deviceChanged(const QString &filesystem);
-        void updateDescription(const QString &filesystem);
-        void formatDisk();
-        void jobCompleted(bool success);
 
-    private:
-        Ui::Format ui;
-        QHash<QString, QString> m_filesystemDescriptions;
-        QList<Solid::Device> m_devices;
-        BlockDevice *m_util;
+    public:
+        DisksDaemon(QObject *parent, const QList<QVariant>&);
+        virtual ~DisksDaemon();
+
+    public Q_SLOTS:
         
-        QString driveTypeToString(Solid::StorageDrive::DriveType driveType) const;
-        QString usageToString(Solid::StorageVolume::UsageType usage) const;
-        QString busToString(Solid::StorageDrive::Bus bus) const;
-        void setWidgetsEnabled(bool enabled);
+        void unloadDaemon() {
+            deleteLater();
+        }
+    
+    private Q_SLOTS:
+        void diskChanged(BlockDevice *);
 };
 
 #endif

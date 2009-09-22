@@ -10,8 +10,8 @@ set(kdiskmanager_SRCS main.cpp diskmanager.cpp blockdeviceutility.cpp OrgFreedes
 
 kde4_add_ui_files(kdiskmanager_SRCS diskmanager.ui )
 
-kde4_add_executable(kdiskmanager ${kdiskmanager_SRCS})
+kde4_add_executable(kdiskutility ${kdiskmanager_SRCS})
 
-target_link_libraries(kdiskmanager ${KDE4_KDEUI_LIBS} ${KDE4_SOLID_LIBS})
+target_link_libraries(kdiskutility kdiskmanager ${KDE4_KDEUI_LIBS} ${KDE4_SOLID_LIBS})
 
-install(TARGETS kdiskmanager  ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kdiskutility  ${INSTALL_TARGETS_DEFAULT_ARGS} )

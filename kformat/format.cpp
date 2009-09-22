@@ -85,7 +85,7 @@ void Format::formatDisk()
    foreach (const Solid::Device &dev, m_devices){
         if (dev.as<Solid::Block>()->device() == ui.deviceComboBox->currentText()){
             delete m_util;
-            m_util = new BlockDeviceUtility(dev);
+            m_util = new BlockDevice(dev);
             connect(m_util, SIGNAL(jobCompleted(bool)), this, SLOT(jobCompleted(bool)));
             setWidgetsEnabled(false);
             m_util->format(ui.filesystemComboBox->currentText(), QStringList() << "label=" + ui.labelLineEdit->text());

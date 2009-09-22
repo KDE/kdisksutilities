@@ -17,43 +17,38 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef FORMAT_H
-#define FORMAT_H
+#include "blockdevicemanager.h"
 
-#include <QDBusInterface>
+#include "OrgFreedesktopDeviceKitDisks.h"
+#include "OrgFreedesktopDeviceKitDisksDevice.h"
 
+#include <QDBusConnection>
+#include <QDBusObjectPath>
+#include <QDBusPendingReply>
+#include <QDBusPendingCallWatcher>
+#include <QDBusReply>
+
+#include <Solid/Block>
 #include <Solid/Device>
-#include <Solid/StorageVolume>
-#include <Solid/StorageDrive>
+#include <Solid/DeviceInterface>
 
-#include <KMainWindow>
+#include <KDebug>
 
-#include "ui_format.h"
-#include <kdiskmanager/blockdevice.h>
-
-class Format : public KMainWindow
+BlockDeviceManager::BlockDeviceManager(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-        
-    public:
-        Format();
-        
-    private slots:
-        void deviceChanged(const QString &filesystem);
-        void updateDescription(const QString &filesystem);
-        void formatDisk();
-        void jobCompleted(bool success);
+    m_disks = new OrgFreedesktopDeviceKitDisksInterface("org.freedesktop.DeviceKit.Disks", "/org/freedesktop/DeviceKit/Disks", QDBusConnection::systemBus(), this);
+    connect(m_disks, SIGNAL(DeviceChanged(const QDBusObjectPath &)), this, SLOT(deviceChanged(const QDBusObjectPath &)));
+}
 
-    private:
-        Ui::Format ui;
-        QHash<QString, QString> m_filesystemDescriptions;
-        QList<Solid::Device> m_devices;
-        BlockDevice *m_util;
-        
-        QString driveTypeToString(Solid::StorageDrive::DriveType driveType) const;
-        QString usageToString(Solid::StorageVolume::UsageType usage) const;
-        QString busToString(Solid::StorageDrive::Bus bus) const;
-        void setWidgetsEnabled(bool enabled);
-};
 
-#endif
+BlockDeviceManager::~BlockDeviceManager()
+{
+}
+
+void BlockDeviceManager::deviceChanged(const QDBusObjectPath &path)
+{
+    emit deviceEvent(new BlockDevice(path.path()));
+}
+
+#include "blockdevicemanager.moc"

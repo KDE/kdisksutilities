@@ -28,7 +28,7 @@
 
 #include <KMainWindow>
 #include "ui_diskmanager.h"
-#include "blockdeviceutility.h"
+#include "kdiskmanager/blockdevice.h"
 
 class DiskManager : public KMainWindow
 {
@@ -46,7 +46,7 @@ class DiskManager : public KMainWindow
         Ui::DiskManager ui;
         QHash<QString, QString> m_filesystemDescriptions;
         QList<Solid::Device> m_devices;
-        BlockDeviceUtility *m_util;
+        BlockDevice *m_util;
         
         QString driveTypeToString(Solid::StorageDrive::DriveType driveType);
         QString usageToString(Solid::StorageVolume::UsageType usage);
