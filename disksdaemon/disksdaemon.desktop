@@ -8,18 +8,22 @@ X-KDE-Kded-load-on-demand=false
 X-KDE-Kded-phase=1
 
 Name=DisksDaemon
+Name[es]=DisksDaemon
 Name[nds]=DisksDaemon
 Name[pt]=Servidor de Discos
 Name[pt_BR]=DisksDaemon
 Name[sv]=Diskdemon
 Name[tr]=Disk Servisi
 Name[uk]=Фонова служба дисків
+Name[x-test]=xxDisksDaemonxx
 
 Comment=Disks Daemon
+Comment[es]=Demonio de discos
 Comment[nds]=Fastplaat-Dämoon
 Comment[pt]=Servidor de Discos
 Comment[pt_BR]=Daemon de discos
 Comment[sv]=Diskdemon
 Comment[tr]=Disk Servisi
 Comment[uk]=Фонова служба дисків
+Comment[x-test]=xxDisks Daemonxx
 
