@@ -121,16 +121,33 @@ bool BlockDevice::isRaid()
     return d->m_deviceInterface->deviceIsLinuxMd(); 
 }
 
-
-int BlockDevice::raidLevel()
+bool BlockDevice::isRaidComponent()
 {
-    //return d->m_deviceInterface->deviceIsLinuxMd(); 
+    return d->m_deviceInterface->deviceIsLinuxMdComponent(); 
+}
+
+QString BlockDevice::raidLevel()
+{
+    if (d->m_deviceInterface->deviceIsLinuxMdComponent()){
+        return d->m_deviceInterface->linuxMdComponentLevel();
+    }else{
+        return d->m_deviceInterface->linuxMdLevel(); 
+    }
 }
 
 
-bool BlockDevice::raidStatus()
+QString BlockDevice::raidStatus()
 {
-    //return d->m_deviceInterface->deviceIsLinuxMd(); 
+    if (d->m_deviceInterface->deviceIsLinuxMdComponent()){
+        return d->m_deviceInterface->linuxMdComponentState().at(0); //UNCLEAR
+    }else{
+        return d->m_deviceInterface->linuxMdState(); 
+    }
+}
+
+QString BlockDevice::parentRaid()
+{
+    return d->m_deviceInterface->linuxMdComponentHolder().path(); 
 }
 
 #include "blockdevice.moc"

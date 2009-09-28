@@ -43,9 +43,11 @@ class KDE_EXPORT BlockDevice : public QObject
         void filesystemCheck(const QStringList& options);
         QString device();
         bool isRaid();
+        bool isRaidComponent();
         bool raidIsDegraded();
-        bool raidStatus();
-        int raidLevel();
+        QString raidStatus();
+        QString raidLevel();
+        QString parentRaid();
 
         
     signals:
