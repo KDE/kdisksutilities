@@ -6,9 +6,9 @@ include (KDE4Defaults)
 include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} )
 
 
-set(kdiskmanager_SRCS main.cpp diskmanager.cpp)
+set(kdiskmanager_SRCS main.cpp diskmanager.cpp raidwidget.cpp raidcomponentwidget.cpp)
 
-kde4_add_ui_files(kdiskmanager_SRCS diskmanager.ui )
+kde4_add_ui_files(kdiskmanager_SRCS diskmanager.ui raidwidget.ui raidcomponentwidget.ui)
 
 kde4_add_executable(kdiskutility ${kdiskmanager_SRCS})
 

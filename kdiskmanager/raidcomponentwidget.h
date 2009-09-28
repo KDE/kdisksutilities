@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef DISKMANAGER_H
-#define DISKMANAGER_H
+#ifndef RAIDCOMPONENTWIDGET_H
+#define RAIDCOMPONENTWIDGET_H
 
 #include <QDBusInterface>
 
@@ -26,33 +26,19 @@
 #include <Solid/StorageVolume>
 #include <Solid/StorageDrive>
 
-#include <KMainWindow>
-#include "ui_diskmanager.h"
+#include <QWidget>
+#include "ui_raidcomponentwidget.h"
 #include "kdiskmanager/blockdevice.h"
 
-class DiskManager : public KMainWindow
+class RaidComponentWidget : public QWidget
 {
     Q_OBJECT
         
     public:
-        DiskManager();
-        
-    private slots:
-        void changeLabel();
-        void selectedDeviceChanged(const QString &filesystem);
-        void jobChanged(bool, QString, uint, bool, int, int, QString, double);
-        
+        RaidComponentWidget(BlockDevice *device, QWidget *parent = 0);
+                
     private:
-        Ui::DiskManager ui;
-        QHash<QString, QString> m_filesystemDescriptions;
-        QList<Solid::Device> m_devices;
-        BlockDevice *m_util;
-        QWidget *m_tmpWidget;
-        
-        QString driveTypeToString(Solid::StorageDrive::DriveType driveType);
-        QString usageToString(Solid::StorageVolume::UsageType usage);
-        QString busToString(Solid::StorageDrive::Bus bus);
-        void setWidgetsEnabled(bool enabled);
+        Ui::RaidComponentWidget ui;
 };
 
 #endif

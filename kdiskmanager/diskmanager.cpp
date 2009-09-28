@@ -19,6 +19,9 @@
 
 #include "diskmanager.h"
 
+#include "raidwidget.h"
+#include "raidcomponentwidget.h"
+
 #include <Solid/Block>
 #include <Solid/Device>
 #include <Solid/DeviceInterface>
@@ -34,6 +37,7 @@
 DiskManager::DiskManager()
 {
     m_util = 0;
+    m_tmpWidget = 0;
     QWidget *mainWidget = new QWidget(this);
     ui.setupUi(mainWidget);
     setCentralWidget(mainWidget);
@@ -42,14 +46,14 @@ DiskManager::DiskManager()
     foreach (const Solid::Device &dev, m_devices){
         ui.deviceComboBox->addItem(dev.as<Solid::Block>()->device());
     }
-    updateDeviceDescription(ui.deviceComboBox->currentText());
+    selectedDeviceChanged(ui.deviceComboBox->currentText());
     
     connect(ui.changeLabelButton, SIGNAL(clicked(bool)), this, SLOT(changeLabel()));
-    connect(ui.deviceComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(updateDeviceDescription(const QString &)));
+    connect(ui.deviceComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(selectedDeviceChanged(const QString &)));
     connect(ui.closeButton, SIGNAL(clicked(bool)), this, SLOT(close()));
 }
 
-void DiskManager::updateDeviceDescription(const QString &device)
+void DiskManager::selectedDeviceChanged(const QString &device)
 {
    foreach (const Solid::Device &dev, m_devices){
         if (dev.as<Solid::Block>()->device() == device){
@@ -61,6 +65,23 @@ void DiskManager::updateDeviceDescription(const QString &device)
             }
             
             ui.deviceIcon->setPixmap(KIcon(dev.icon()).pixmap(64, 64));
+            
+            BlockDevice *blkDev = new BlockDevice(dev);
+            QWidget *wdg;
+            if (blkDev->isRaidComponent()){
+                wdg = new RaidComponentWidget(blkDev);
+            }else if (blkDev->isRaid()){
+                wdg = new RaidWidget(blkDev);
+            }else{
+                wdg = new QWidget();
+            }
+            
+            if (m_tmpWidget){
+                ui.widget->layout()->removeWidget(m_tmpWidget);
+                delete m_tmpWidget;
+            }
+            m_tmpWidget = wdg;
+            ui.widget->layout()->addWidget(wdg);
         }
     }
 }

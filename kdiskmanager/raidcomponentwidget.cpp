@@ -1,4 +1,4 @@
-/***************************************************************************
+ /***************************************************************************
  *   Copyright 2009 by Davide Bettio <davide.bettio@kdemail.net>           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,42 +17,26 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef DISKMANAGER_H
-#define DISKMANAGER_H
+#include "raidcomponentwidget.h"
 
-#include <QDBusInterface>
-
+#include <Solid/Block>
 #include <Solid/Device>
-#include <Solid/StorageVolume>
+#include <Solid/DeviceInterface>
 #include <Solid/StorageDrive>
+#include <Solid/StorageVolume>
 
-#include <KMainWindow>
-#include "ui_diskmanager.h"
+#include <KDebug>
+#include <KMessageBox>
+#include <KLocale>
+
 #include "kdiskmanager/blockdevice.h"
 
-class DiskManager : public KMainWindow
+RaidComponentWidget::RaidComponentWidget(BlockDevice *device, QWidget *parent)
 {
-    Q_OBJECT
-        
-    public:
-        DiskManager();
-        
-    private slots:
-        void changeLabel();
-        void selectedDeviceChanged(const QString &filesystem);
-        void jobChanged(bool, QString, uint, bool, int, int, QString, double);
-        
-    private:
-        Ui::DiskManager ui;
-        QHash<QString, QString> m_filesystemDescriptions;
-        QList<Solid::Device> m_devices;
-        BlockDevice *m_util;
-        QWidget *m_tmpWidget;
-        
-        QString driveTypeToString(Solid::StorageDrive::DriveType driveType);
-        QString usageToString(Solid::StorageVolume::UsageType usage);
-        QString busToString(Solid::StorageDrive::Bus bus);
-        void setWidgetsEnabled(bool enabled);
-};
+    ui.setupUi(this);
+    
+    ui.parentRaid->setText(i18nc("raid device and raid level '/dev/md0 (raid10)'", "%1 (%2)", device->parentRaid(), device->raidLevel()));
+    ui.status->setText(device->raidStatus());
+}
 
-#endif
+#include "raidcomponentwidget.moc"
