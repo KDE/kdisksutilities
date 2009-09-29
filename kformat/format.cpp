@@ -19,6 +19,8 @@
 
 #include "format.h"
 
+#include <kdiskmanager/blockdevicemanager.h>
+
 #include <Solid/Block>
 #include <Solid/Device>
 #include <Solid/DeviceInterface>
@@ -85,7 +87,7 @@ void Format::formatDisk()
    foreach (const Solid::Device &dev, m_devices){
         if (dev.as<Solid::Block>()->device() == ui.deviceComboBox->currentText()){
             delete m_util;
-            m_util = new BlockDevice(dev);
+            m_util = BlockDeviceManager::blockDevice(dev);
             connect(m_util, SIGNAL(jobCompleted(bool)), this, SLOT(jobCompleted(bool)));
             setWidgetsEnabled(false);
             m_util->format(ui.filesystemComboBox->currentText(), QStringList() << "label=" + ui.labelLineEdit->text());

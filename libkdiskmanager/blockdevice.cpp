@@ -19,6 +19,9 @@
 
 #include "blockdevice.h"
 
+#include "raid.h"
+#include "raidcomponent.h"
+
 #include "OrgFreedesktopDeviceKitDisks.h"
 #include "OrgFreedesktopDeviceKitDisksDevice.h"
 
@@ -41,28 +44,10 @@ class BlockDevice::Private
         OrgFreedesktopDeviceKitDisksDeviceInterface *m_deviceInterface;
 };
 
-BlockDevice::BlockDevice(const Solid::Device &dev)
-    : d(new Private())
-{
-    OrgFreedesktopDeviceKitDisksInterface disks("org.freedesktop.DeviceKit.Disks", "/org/freedesktop/DeviceKit/Disks", QDBusConnection::systemBus(), this);
-
-    kDebug() << "Connected to DevKit-disks version: " << disks.daemonVersion();
-
-    QDBusPendingReply<QDBusObjectPath> deviceKitReply = disks.FindDeviceByDeviceFile(dev.as<Solid::Block>()->device());
-    deviceKitReply.waitForFinished();
-    if (deviceKitReply.isError()){
-        kDebug() << "Cannot enumerate devices" << "\n";
-        return;
-    }
-    
-    d->m_deviceInterface = new OrgFreedesktopDeviceKitDisksDeviceInterface("org.freedesktop.DeviceKit.Disks", deviceKitReply.value().path(), QDBusConnection::systemBus(), this);
-    connect(d->m_deviceInterface, SIGNAL(JobChanged(bool, bool, const QString &, uint, double)), this, SLOT(jobChanged(bool, bool, const QString &, uint, double)));
-}
-
 BlockDevice::BlockDevice(const QString &device)
     : d(new Private())
 {
-    OrgFreedesktopDeviceKitDisksInterface disks("org.freedesktop.DeviceKit.Disks", "/org/freedesktop/DeviceKit/Disks", QDBusConnection::systemBus(), this);
+    OrgFreedesktopDeviceKitDisksInterface disks("org.freedesktop.DeviceKit.Disks", "/org/freedesktop/DeviceKit/Disks", QDBusConnection::systemBus());
 
     kDebug() << "Connected to DevKit-disks version: " << disks.daemonVersion();
 
@@ -74,6 +59,40 @@ BlockDevice::~BlockDevice()
 {
 }
 
+
+bool BlockDevice::is(BlockDeviceType t)
+{
+    switch(t){
+        case RaidDevice:
+            return d->m_deviceInterface->deviceIsLinuxMd();
+            
+        case RaidComponentDevice:
+            return d->m_deviceInterface->deviceIsLinuxMdComponent();
+            
+        case DriveDevice:
+            return false;
+            
+        default:
+            return false;
+    }
+}
+
+QObject *BlockDevice::as(BlockDeviceType t)
+{
+    switch(t){
+        case RaidDevice:
+            return new Raid(this);
+            
+        case RaidComponentDevice:
+            return new RaidComponent(this);
+            
+        case DriveDevice:
+            return 0;
+            
+        default:
+            return 0;
+    }
+}
 
 void BlockDevice::format(const QString &filesystem, const QStringList& params)
 {
@@ -116,38 +135,27 @@ QString BlockDevice::device()
     return d->m_deviceInterface->deviceFile();
 }
 
-bool BlockDevice::isRaid()
-{
-    return d->m_deviceInterface->deviceIsLinuxMd(); 
-}
+QString BlockDevice::raidLevel()                                                                
+{                                                                                               
+    if (d->m_deviceInterface->deviceIsLinuxMdComponent()){                                      
+        return d->m_deviceInterface->linuxMdComponentLevel();                                   
+    }else{                                                                                      
+        return d->m_deviceInterface->linuxMdLevel();                                            
+    }                                                                                           
+}                                                                                               
 
-bool BlockDevice::isRaidComponent()
-{
-    return d->m_deviceInterface->deviceIsLinuxMdComponent(); 
-}
-
-QString BlockDevice::raidLevel()
-{
-    if (d->m_deviceInterface->deviceIsLinuxMdComponent()){
-        return d->m_deviceInterface->linuxMdComponentLevel();
-    }else{
-        return d->m_deviceInterface->linuxMdLevel(); 
-    }
-}
-
-
-QString BlockDevice::raidStatus()
+QString BlockDevice::raidStatus()                                                               
 {
     if (d->m_deviceInterface->deviceIsLinuxMdComponent()){
         return d->m_deviceInterface->linuxMdComponentState().at(0); //UNCLEAR
     }else{
-        return d->m_deviceInterface->linuxMdState(); 
+        return d->m_deviceInterface->linuxMdState();
     }
 }
 
-QString BlockDevice::parentRaid()
+QString BlockDevice::parentRaid()                                                               
 {
-    return d->m_deviceInterface->linuxMdComponentHolder().path(); 
+    return d->m_deviceInterface->linuxMdComponentHolder().path();
 }
 
 #include "blockdevice.moc"

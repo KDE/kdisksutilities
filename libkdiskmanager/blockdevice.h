@@ -29,21 +29,37 @@ namespace Solid
     class Device;
 }
 
+class BlockDeviceInterface;
+
 class KDE_EXPORT BlockDevice : public QObject
 {
     Q_OBJECT
         
     public:
-        BlockDevice(const Solid::Device &dev);
+        enum BlockDeviceType
+        {
+            RaidDevice,
+            RaidComponentDevice,
+            DriveDevice
+        };
+
         BlockDevice(const QString &device);
         ~BlockDevice();
         
+        bool is(BlockDeviceType t);
+        QObject *as(BlockDeviceType t);
+        
+        template <class T> T *as()
+        {
+            BlockDeviceType type = T::blockDeviceType();
+
+            return qobject_cast<T *>(as(type));
+        }
+
         void format(const QString &filesystem, const QStringList& params);
         void setLabel(const QString& label);
         void filesystemCheck(const QStringList& options);
         QString device();
-        bool isRaid();
-        bool isRaidComponent();
         bool raidIsDegraded();
         QString raidStatus();
         QString raidLevel();

@@ -32,7 +32,8 @@
 #include <KMessageBox>
 #include <KLocale>
 
-#include "kdiskmanager/blockdevice.h"
+#include <kdiskmanager/blockdevice.h>
+#include <kdiskmanager/blockdevicemanager.h>
 
 DiskManager::DiskManager()
 {
@@ -66,11 +67,11 @@ void DiskManager::selectedDeviceChanged(const QString &device)
             
             ui.deviceIcon->setPixmap(KIcon(dev.icon()).pixmap(64, 64));
             
-            BlockDevice *blkDev = new BlockDevice(dev);
+            BlockDevice *blkDev = BlockDeviceManager::blockDevice(dev);
             QWidget *wdg;
-            if (blkDev->isRaidComponent()){
+            if (blkDev->is(BlockDevice::RaidComponentDevice)){
                 wdg = new RaidComponentWidget(blkDev);
-            }else if (blkDev->isRaid()){
+            }else if (blkDev->is(BlockDevice::RaidDevice)){
                 wdg = new RaidWidget(blkDev);
             }else{
                 wdg = new QWidget();
@@ -91,7 +92,7 @@ void DiskManager::changeLabel()
     foreach (const Solid::Device &dev, m_devices){
       if (dev.as<Solid::Block>()->device() == ui.deviceComboBox->currentText()){
           delete m_util;
-          m_util = new BlockDevice(dev);
+          m_util = BlockDeviceManager::blockDevice(dev);
           connect(m_util, SIGNAL(jobCompleted(bool)), this, SLOT(jobCompleted(bool)));
           setWidgetsEnabled(false);
           m_util->setLabel(ui.labelLineEdit->text());

@@ -62,7 +62,7 @@ DisksDaemon::~DisksDaemon()
 
 void DisksDaemon::diskChanged(BlockDevice *device)
 {
-    if (device->isRaid()){
+    if (device->is(BlockDevice::RaidDevice)){
         if (device->raidIsDegraded()){
             KNotification::event(KNotification::Catastrophe, "RAID Disk Failure", i18n("Disk failure in %1 RAID.\n"
                                                                                         "Please replace the faulty device as soon as possible.",

@@ -51,4 +51,20 @@ void BlockDeviceManager::deviceChanged(const QDBusObjectPath &path)
     emit deviceEvent(new BlockDevice(path.path()));
 }
 
+BlockDevice *BlockDeviceManager::blockDevice(const Solid::Device &dev)
+{
+    OrgFreedesktopDeviceKitDisksInterface disks("org.freedesktop.DeviceKit.Disks", "/org/freedesktop/DeviceKit/Disks", QDBusConnection::systemBus());
+
+    kDebug() << "Connected to DevKit-disks version: " << disks.daemonVersion();
+
+    QDBusPendingReply<QDBusObjectPath> deviceKitReply = disks.FindDeviceByDeviceFile(dev.as<Solid::Block>()->device());
+    deviceKitReply.waitForFinished();
+    if (deviceKitReply.isError()){
+        kDebug() << "Cannot enumerate devices" << "\n";
+        return 0;
+    }
+    
+    return new BlockDevice(deviceKitReply.value().path());
+}
+
 #include "blockdevicemanager.moc"

@@ -9,6 +9,8 @@ include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} )
 set(libkdiskmanager_SRCS
 	blockdevice.cpp
 	blockdevicemanager.cpp
+    raid.cpp
+    raidcomponent.cpp
 	OrgFreedesktopDeviceKitDisks.cpp 
 	OrgFreedesktopDeviceKitDisksDevice.cpp
 )
@@ -24,5 +26,7 @@ install(TARGETS kdiskmanager EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFA
 install(FILES
     blockdevice.h
     blockdevicemanager.h
+    raid.h
+    raidcomponent.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/kdiskmanager COMPONENT Devel)
 

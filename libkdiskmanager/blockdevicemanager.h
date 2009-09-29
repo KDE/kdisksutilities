@@ -40,7 +40,9 @@ class KDE_EXPORT BlockDeviceManager : public QObject
     public:
         BlockDeviceManager(QObject *parent);
         ~BlockDeviceManager();
-   
+
+        static BlockDevice *blockDevice(const Solid::Device &dev);
+
     signals:
         void deviceEvent(BlockDevice *);
         

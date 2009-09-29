@@ -17,28 +17,44 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "raidcomponentwidget.h"
+#include "raid.h"
 
-#include <Solid/Block>
-#include <Solid/Device>
-#include <Solid/DeviceInterface>
-#include <Solid/StorageDrive>
-#include <Solid/StorageVolume>
-
-#include <KDebug>
-#include <KMessageBox>
-#include <KLocale>
-
-#include "kdiskmanager/blockdevice.h"
-#include "kdiskmanager/raidcomponent.h"
-
-RaidComponentWidget::RaidComponentWidget(BlockDevice *device, QWidget *parent)
-    : QWidget(parent)
+class Raid::Private
 {
-    ui.setupUi(this);
+    public:
+        BlockDevice *parent;
+        
+        Private(BlockDevice *p)
+        {
+            parent = p;
+        }
+};
+
+Raid::Raid(BlockDevice *dev)
+    : QObject(dev), d(new Private(dev))
+{
     
-    ui.parentRaid->setText(i18nc("raid device and raid level '/dev/md0 (raid10)'", "%1 (%2)", device->as<RaidComponent>()->parentRaid(), device->as<RaidComponent>()->level()));
-    ui.status->setText(device->as<RaidComponent>()->status());
 }
 
-#include "raidcomponentwidget.moc"
+BlockDevice::BlockDeviceType Raid::blockDeviceType()
+{
+    return BlockDevice::RaidDevice;
+}
+
+bool Raid::isDegraded()
+{
+    return d->parent->raidIsDegraded();
+}
+
+
+QString Raid::level()                                                                
+{
+    return d->parent->raidLevel();
+}
+
+QString Raid::status()                                                               
+{
+    return d->parent->raidStatus();
+}
+
+#include "raid.moc"

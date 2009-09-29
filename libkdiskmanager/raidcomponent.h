@@ -17,28 +17,31 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "raidcomponentwidget.h"
+#ifndef RAIDCOMPONENT_H
+#define RAIDCOMPONENT_H
 
-#include <Solid/Block>
-#include <Solid/Device>
-#include <Solid/DeviceInterface>
-#include <Solid/StorageDrive>
-#include <Solid/StorageVolume>
+#include "blockdevice.h"
 
-#include <KDebug>
-#include <KMessageBox>
-#include <KLocale>
+#include <kdemacros.h>
 
-#include "kdiskmanager/blockdevice.h"
-#include "kdiskmanager/raidcomponent.h"
+#include <QStringList>
 
-RaidComponentWidget::RaidComponentWidget(BlockDevice *device, QWidget *parent)
-    : QWidget(parent)
+class KDE_EXPORT RaidComponent : public QObject
 {
-    ui.setupUi(this);
-    
-    ui.parentRaid->setText(i18nc("raid device and raid level '/dev/md0 (raid10)'", "%1 (%2)", device->as<RaidComponent>()->parentRaid(), device->as<RaidComponent>()->level()));
-    ui.status->setText(device->as<RaidComponent>()->status());
-}
+    Q_OBJECT
+        
+    public:
+        RaidComponent(BlockDevice *dev);
 
-#include "raidcomponentwidget.moc"
+        static BlockDevice::BlockDeviceType blockDeviceType();
+
+        QString status();
+        QString level();
+        QString parentRaid();
+
+    private:
+        class Private;
+        Private *d;
+};
+
+#endif
