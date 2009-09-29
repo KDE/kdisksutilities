@@ -49,10 +49,7 @@ class Format : public KMainWindow
         QHash<QString, QString> m_filesystemDescriptions;
         QList<Solid::Device> m_devices;
         BlockDevice *m_util;
-        
-        QString driveTypeToString(Solid::StorageDrive::DriveType driveType) const;
-        QString usageToString(Solid::StorageVolume::UsageType usage) const;
-        QString busToString(Solid::StorageDrive::Bus bus) const;
+
         void setWidgetsEnabled(bool enabled);
 };
 

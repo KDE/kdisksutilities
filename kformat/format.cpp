@@ -20,6 +20,7 @@
 #include "format.h"
 
 #include <kdiskmanager/blockdevicemanager.h>
+#include <kdiskmanager/solidstrings.h>
 
 #include <Solid/Block>
 #include <Solid/Device>
@@ -106,132 +107,6 @@ void Format::setWidgetsEnabled(bool enabled)
 void Format::jobCompleted(bool error)
 {
     setWidgetsEnabled(true);
-}
-
-QString Format::usageToString(Solid::StorageVolume::UsageType usage) const
-{
-    switch (usage){
-        case Solid::StorageVolume::Other:
-            return i18n("other usage");
-                      
-            break;
-            
-        case Solid::StorageVolume::Unused:
-            return i18n("unused volume");
-                      
-            break;
-            
-        case Solid::StorageVolume::FileSystem:
-            return i18n("filesystem");
-                      
-            break;
-            
-        case Solid::StorageVolume::PartitionTable:
-            return i18n("partition table");
-                      
-            break;
-            
-        case Solid::StorageVolume::Raid:
-            return i18n("raid volume");  
-                      
-            break;
-            
-        case Solid::StorageVolume::Encrypted:
-            return i18n("encrypted volume");
-                      
-            break;
-        }
-        
-        return i18n("unknown");
-}
-
-QString Format::busToString(Solid::StorageDrive::Bus bus) const
-{
-    switch (bus){
-        case Solid::StorageDrive::Ide:
-            return i18n("IDE");
-
-            break;
-                        
-        case Solid::StorageDrive::Usb:
-            return i18n("USB");
-            
-            break;
-                        
-        case Solid::StorageDrive::Ieee1394:
-            return i18n("IEEE 1394");
-                        
-            break;
-                        
-        case Solid::StorageDrive::Scsi:
-            return i18n("SCSI");
-                        
-            break;
-                        
-        case Solid::StorageDrive::Sata:
-            return i18n("SATA");
-                        
-            break;
-                        
-        case Solid::StorageDrive::Platform:
-            return i18n("platform");
-                        
-            break;
-    }
-    
-    return i18n("unknown");
-}
-
-QString Format::driveTypeToString(Solid::StorageDrive::DriveType driveType) const
-{
-    switch (driveType){
-        case Solid::StorageDrive::HardDisk:
-            return i18n("hard disk");
-            
-            break;
-                        
-        case Solid::StorageDrive::CdromDrive:
-            return i18n("cdrom drive");
-                        
-            break;
-                        
-        case Solid::StorageDrive::Floppy:
-            return i18n("floppy disk");
-                        
-            break;
-                        
-        case Solid::StorageDrive::Tape:
-            return i18n("tape");
-                        
-            break;
-                        
-        case Solid::StorageDrive::CompactFlash:
-            return i18n("compact flash");
-                        
-            break;
-
-        case Solid::StorageDrive::MemoryStick:
-            return i18n("memory stick");
-                        
-            break;
-
-        case Solid::StorageDrive::SmartMedia:
-            return i18n("smart media");
-                        
-            break;
-
-        case Solid::StorageDrive::SdMmc:
-            return i18n("sd mmc");
-                        
-            break;
-
-        case Solid::StorageDrive::Xd:
-            return i18n("xd");
-                        
-            break;
-        }
-        
-        return i18n("unknown");
 }
 
 #include "format.moc"

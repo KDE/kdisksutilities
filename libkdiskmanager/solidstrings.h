@@ -17,39 +17,17 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef DISKMANAGER_H
-#define DISKMANAGER_H
+#ifndef SOLIDSTRINGS_H
+#define SOLIDSTRINGS_H
 
-#include <QDBusInterface>
+#include <kdemacros.h>
 
 #include <Solid/Device>
 #include <Solid/StorageVolume>
 #include <Solid/StorageDrive>
 
-#include <KMainWindow>
-#include "ui_diskmanager.h"
-#include "kdiskmanager/blockdevice.h"
-
-class DiskManager : public KMainWindow
-{
-    Q_OBJECT
-        
-    public:
-        DiskManager();
-        
-    private slots:
-        void changeLabel();
-        void selectedDeviceChanged(const QString &filesystem);
-        void jobChanged(bool, QString, uint, bool, int, int, QString, double);
-        
-    private:
-        Ui::DiskManager ui;
-        QHash<QString, QString> m_filesystemDescriptions;
-        QList<Solid::Device> m_devices;
-        BlockDevice *m_util;
-        QWidget *m_tmpWidget;
-
-        void setWidgetsEnabled(bool enabled);
-};
+KDE_EXPORT QString usageToString(Solid::StorageVolume::UsageType usage);
+KDE_EXPORT QString busToString(Solid::StorageDrive::Bus bus);
+KDE_EXPORT QString driveTypeToString(Solid::StorageDrive::DriveType driveType);
 
 #endif

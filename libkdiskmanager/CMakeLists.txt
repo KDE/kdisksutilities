@@ -11,6 +11,7 @@ set(libkdiskmanager_SRCS
 	blockdevicemanager.cpp
     raid.cpp
     raidcomponent.cpp
+    solidstrings.cpp
 	OrgFreedesktopDeviceKitDisks.cpp 
 	OrgFreedesktopDeviceKitDisksDevice.cpp
 )
@@ -28,5 +29,6 @@ install(FILES
     blockdevicemanager.h
     raid.h
     raidcomponent.h
+    solidstrings.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/kdiskmanager COMPONENT Devel)
 
