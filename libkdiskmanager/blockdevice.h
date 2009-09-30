@@ -40,7 +40,8 @@ class KDE_EXPORT BlockDevice : public QObject
         {
             RaidDevice,
             RaidComponentDevice,
-            DriveDevice
+            DriveDevice,
+            FilesystemDevice
         };
 
         ~BlockDevice();
@@ -56,19 +57,21 @@ class KDE_EXPORT BlockDevice : public QObject
         }
 
         void format(const QString &filesystem, const QStringList& params);
-        void setLabel(const QString& label);
-        void filesystemCheck(const QStringList& options);
         QString device();
         
         friend class BlockDeviceManager;
         friend class Raid;
         friend class RaidComponent;
+        friend class Filesystem;
         
     signals:
         void jobCompleted(bool success);
         
     private:
         BlockDevice(const QString &device);
+        
+        void setLabel(const QString& label);
+        void filesystemCheck(const QStringList& options);
         
         bool raidIsDegraded();
         QString raidStatus();

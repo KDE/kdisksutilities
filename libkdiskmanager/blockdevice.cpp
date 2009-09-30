@@ -21,6 +21,7 @@
 
 #include "raid.h"
 #include "raidcomponent.h"
+#include "filesystem.h"
 
 #include "OrgFreedesktopDeviceKitDisks.h"
 #include "OrgFreedesktopDeviceKitDisksDevice.h"
@@ -88,6 +89,9 @@ QObject *BlockDevice::as(BlockDeviceType t)
             
         case DriveDevice:
             return 0;
+
+        case FilesystemDevice:
+            return new Filesystem(this);
             
         default:
             return 0;

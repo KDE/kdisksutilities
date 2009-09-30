@@ -17,35 +17,43 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "filesystemwidget.h"
+#include "filesystem.h"
 
-#include <Solid/Block>
-#include <Solid/Device>
-#include <Solid/DeviceInterface>
-#include <Solid/StorageDrive>
-#include <Solid/StorageVolume>
-
-#include <KDebug>
-#include <KMessageBox>
-#include <KLocale>
-
-#include <kdiskmanager/blockdevice.h>
-#include <kdiskmanager/filesystem.h>
-
-FilesystemWidget::FilesystemWidget(BlockDevice *device, QWidget *parent)
-    : QWidget(parent)
+class Filesystem::Private
 {
-    ui.setupUi(this);
-    blkDev = device;
+    public:
+        BlockDevice *parent;
+        
+        Private(BlockDevice *p)
+        {
+            parent = p;
+        }
+};
+
+Filesystem::Filesystem(BlockDevice *dev)
+    : QObject(dev), d(new Private(dev))
+{
     
-    connect(ui.changeLabelButton, SIGNAL(clicked(bool)), this, SLOT(changeLabel()));
 }
 
-void FilesystemWidget::changeLabel()
-{   
-    connect(blkDev, SIGNAL(jobCompleted(bool)), this, SLOT(jobCompleted(bool)));
-    //setWidgetsEnabled(false);
-    blkDev->as<Filesystem>()->setLabel(ui.labelLineEdit->text());
+BlockDevice::BlockDeviceType Filesystem::blockDeviceType()
+{
+    return BlockDevice::FilesystemDevice;
 }
 
-#include "filesystemwidget.moc"
+QString Filesystem::type()
+{
+    return "";
+}
+
+void Filesystem::setLabel(const QString& label)
+{
+    d->parent->setLabel(label);
+}
+
+void Filesystem::filesystemCheck(const QStringList& options)
+{
+    d->parent->filesystemCheck(options);
+}
+
+#include "filesystem.moc"

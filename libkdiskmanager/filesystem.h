@@ -1,4 +1,4 @@
-/***************************************************************************
+ /***************************************************************************
  *   Copyright 2009 by Davide Bettio <davide.bettio@kdemail.net>           *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,35 +17,34 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "filesystemwidget.h"
+#ifndef FILESYSTEM_H
+#define FILESYSTEM_H
 
-#include <Solid/Block>
-#include <Solid/Device>
-#include <Solid/DeviceInterface>
-#include <Solid/StorageDrive>
-#include <Solid/StorageVolume>
+#include "blockdevice.h"
 
-#include <KDebug>
-#include <KMessageBox>
-#include <KLocale>
+#include <kdemacros.h>
 
-#include <kdiskmanager/blockdevice.h>
-#include <kdiskmanager/filesystem.h>
+#include <QStringList>
 
-FilesystemWidget::FilesystemWidget(BlockDevice *device, QWidget *parent)
-    : QWidget(parent)
+class KDE_EXPORT Filesystem : public QObject
 {
-    ui.setupUi(this);
-    blkDev = device;
-    
-    connect(ui.changeLabelButton, SIGNAL(clicked(bool)), this, SLOT(changeLabel()));
-}
+    Q_OBJECT
 
-void FilesystemWidget::changeLabel()
-{   
-    connect(blkDev, SIGNAL(jobCompleted(bool)), this, SLOT(jobCompleted(bool)));
-    //setWidgetsEnabled(false);
-    blkDev->as<Filesystem>()->setLabel(ui.labelLineEdit->text());
-}
+    Q_PROPERTY(QString type READ type)
 
-#include "filesystemwidget.moc"
+    public:
+        static BlockDevice::BlockDeviceType blockDeviceType();
+
+        QString type();
+        void setLabel(const QString& label);
+        void filesystemCheck(const QStringList& options);
+        
+        friend QObject *BlockDevice::as(BlockDeviceType t);
+    private:
+        Filesystem(BlockDevice *dev);
+        
+        class Private;
+        Private *d;
+};
+
+#endif
