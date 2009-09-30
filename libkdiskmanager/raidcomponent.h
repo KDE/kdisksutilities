@@ -29,7 +29,10 @@
 class KDE_EXPORT RaidComponent : public QObject
 {
     Q_OBJECT
-        
+
+    Q_PROPERTY(QString status READ status)
+    Q_PROPERTY(QString level READ level)
+
     public:
         RaidComponent(BlockDevice *dev);
 

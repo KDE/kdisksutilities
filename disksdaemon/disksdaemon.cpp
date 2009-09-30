@@ -21,6 +21,7 @@
 
 #include <kdiskmanager/blockdevicemanager.h>
 #include <kdiskmanager/blockdevice.h>
+#include <kdiskmanager/raid.h>
 
 #include <kpluginfactory.h>
 #include <KLocale>
@@ -63,7 +64,7 @@ DisksDaemon::~DisksDaemon()
 void DisksDaemon::diskChanged(BlockDevice *device)
 {
     if (device->is(BlockDevice::RaidDevice)){
-        if (device->raidIsDegraded()){
+        if (device->as<Raid>()->isDegraded()){
             KNotification::event(KNotification::Catastrophe, "RAID Disk Failure", i18n("Disk failure in %1 RAID.\n"
                                                                                         "Please replace the faulty device as soon as possible.",
                                                                                         device->device()));

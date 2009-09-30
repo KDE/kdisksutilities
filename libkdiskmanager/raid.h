@@ -29,7 +29,11 @@
 class KDE_EXPORT Raid : public QObject
 {
     Q_OBJECT
-        
+
+    Q_PROPERTY(bool degraded READ isDegraded)
+    Q_PROPERTY(QString status READ status)
+    Q_PROPERTY(QString level READ level)
+    
     public:
         Raid(BlockDevice *dev);
         
