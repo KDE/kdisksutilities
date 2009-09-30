@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef DISKMANAGER_H
-#define DISKMANAGER_H
+#ifndef FILESYSTEMWIDGET_H
+#define FILESYSTEMWIDGET_H
 
 #include <QDBusInterface>
 
@@ -26,29 +26,23 @@
 #include <Solid/StorageVolume>
 #include <Solid/StorageDrive>
 
-#include <KMainWindow>
-#include "ui_diskmanager.h"
+#include <QWidget>
+#include "ui_filesystemwidget.h"
 #include "kdiskmanager/blockdevice.h"
 
-class DiskManager : public KMainWindow
+class FilesystemWidget : public QWidget
 {
     Q_OBJECT
         
     public:
-        DiskManager();
-        
+        FilesystemWidget(BlockDevice *device, QWidget *parent = 0);
+
     private slots:
-        void selectedDeviceChanged(const QString &filesystem);
-        void jobChanged(bool, QString, uint, bool, int, int, QString, double);
+        void changeLabel();
         
     private:
-        Ui::DiskManager ui;
-        QHash<QString, QString> m_filesystemDescriptions;
-        QList<Solid::Device> m_devices;
-        BlockDevice *m_util;
-        QWidget *m_tmpWidget;
-
-        void setWidgetsEnabled(bool enabled);
+        Ui::FilesystemWidget ui;
+        BlockDevice *blkDev;
 };
 
 #endif

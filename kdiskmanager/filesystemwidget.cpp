@@ -17,38 +17,34 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef DISKMANAGER_H
-#define DISKMANAGER_H
+#include "filesystemwidget.h"
 
-#include <QDBusInterface>
-
+#include <Solid/Block>
 #include <Solid/Device>
-#include <Solid/StorageVolume>
+#include <Solid/DeviceInterface>
 #include <Solid/StorageDrive>
+#include <Solid/StorageVolume>
 
-#include <KMainWindow>
-#include "ui_diskmanager.h"
+#include <KDebug>
+#include <KMessageBox>
+#include <KLocale>
+
 #include "kdiskmanager/blockdevice.h"
 
-class DiskManager : public KMainWindow
+FilesystemWidget::FilesystemWidget(BlockDevice *device, QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-        
-    public:
-        DiskManager();
-        
-    private slots:
-        void selectedDeviceChanged(const QString &filesystem);
-        void jobChanged(bool, QString, uint, bool, int, int, QString, double);
-        
-    private:
-        Ui::DiskManager ui;
-        QHash<QString, QString> m_filesystemDescriptions;
-        QList<Solid::Device> m_devices;
-        BlockDevice *m_util;
-        QWidget *m_tmpWidget;
+    ui.setupUi(this);
+    blkDev = device;
+    
+    connect(ui.changeLabelButton, SIGNAL(clicked(bool)), this, SLOT(changeLabel()));
+}
 
-        void setWidgetsEnabled(bool enabled);
-};
+void FilesystemWidget::changeLabel()
+{   
+    connect(blkDev, SIGNAL(jobCompleted(bool)), this, SLOT(jobCompleted(bool)));
+    //setWidgetsEnabled(false);
+    blkDev->setLabel(ui.labelLineEdit->text());
+}
 
-#endif
+#include "filesystemwidget.moc"

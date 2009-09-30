@@ -49,8 +49,7 @@ DiskManager::DiskManager()
         ui.deviceComboBox->addItem(dev.as<Solid::Block>()->device());
     }
     selectedDeviceChanged(ui.deviceComboBox->currentText());
-    
-    connect(ui.changeLabelButton, SIGNAL(clicked(bool)), this, SLOT(changeLabel()));
+
     connect(ui.deviceComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(selectedDeviceChanged(const QString &)));
     connect(ui.closeButton, SIGNAL(clicked(bool)), this, SLOT(close()));
 }
@@ -85,21 +84,6 @@ void DiskManager::selectedDeviceChanged(const QString &device)
             m_tmpWidget = wdg;
             ui.widget->layout()->addWidget(wdg);
         }
-    }
-}
-
-void DiskManager::changeLabel()
-{   
-    foreach (const Solid::Device &dev, m_devices){
-      if (dev.as<Solid::Block>()->device() == ui.deviceComboBox->currentText()){
-          delete m_util;
-          m_util = BlockDeviceManager::blockDevice(dev);
-          connect(m_util, SIGNAL(jobCompleted(bool)), this, SLOT(jobCompleted(bool)));
-          setWidgetsEnabled(false);
-          m_util->setLabel(ui.labelLineEdit->text());
-
-          return;
-      }
     }
 }
 
