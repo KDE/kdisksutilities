@@ -35,15 +35,16 @@ class KDE_EXPORT Raid : public QObject
     Q_PROPERTY(QString level READ level)
     
     public:
-        Raid(BlockDevice *dev);
-        
         static BlockDevice::BlockDeviceType blockDeviceType();
 
         bool isDegraded();
         QString status();
         QString level();
 
+        friend QObject *BlockDevice::as(BlockDeviceType t);
     private:
+        Raid(BlockDevice *dev);
+        
         class Private;
         Private *d;
 };

@@ -42,8 +42,7 @@ class KDE_EXPORT BlockDevice : public QObject
             RaidComponentDevice,
             DriveDevice
         };
-        
-        BlockDevice(const QString &device);
+
         ~BlockDevice();
         
         bool is(BlockDeviceType t);
@@ -61,6 +60,7 @@ class KDE_EXPORT BlockDevice : public QObject
         void filesystemCheck(const QStringList& options);
         QString device();
         
+        friend class BlockDeviceManager;
         friend class Raid;
         friend class RaidComponent;
         
@@ -68,6 +68,8 @@ class KDE_EXPORT BlockDevice : public QObject
         void jobCompleted(bool success);
         
     private:
+        BlockDevice(const QString &device);
+        
         bool raidIsDegraded();
         QString raidStatus();
         QString raidLevel();

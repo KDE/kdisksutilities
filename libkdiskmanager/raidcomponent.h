@@ -34,15 +34,16 @@ class KDE_EXPORT RaidComponent : public QObject
     Q_PROPERTY(QString level READ level)
 
     public:
-        RaidComponent(BlockDevice *dev);
-
         static BlockDevice::BlockDeviceType blockDeviceType();
 
         QString status();
         QString level();
         QString parentRaid();
 
+        friend QObject *BlockDevice::as(BlockDeviceType t);
     private:
+        RaidComponent(BlockDevice *dev);
+        
         class Private;
         Private *d;
 };
