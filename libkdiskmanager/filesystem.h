@@ -36,6 +36,8 @@ class KDE_EXPORT Filesystem : public QObject
         static BlockDevice::BlockDeviceType blockDeviceType();
 
         QString type();
+        QString label();
+
         void setLabel(const QString& label);
         void filesystemCheck(const QStringList& options);
         

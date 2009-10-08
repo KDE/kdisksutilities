@@ -69,10 +69,13 @@ bool BlockDevice::is(BlockDeviceType t)
             
         case RaidComponentDevice:
             return d->m_deviceInterface->deviceIsLinuxMdComponent();
-            
+
         case DriveDevice:
             return false;
-            
+
+        case FilesystemDevice:
+            return d->m_deviceInterface->idUsage() == "filesystem";
+
         default:
             return false;
     }
