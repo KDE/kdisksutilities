@@ -21,6 +21,7 @@
 
 #include "raidwidget.h"
 #include "raidcomponentwidget.h"
+#include "filesystemwidget.h"
 
 #include <Solid/Block>
 #include <Solid/Device>
@@ -73,6 +74,8 @@ void DiskManager::selectedDeviceChanged(const QString &device)
                 wdg = new RaidComponentWidget(blkDev);
             }else if (blkDev->is(BlockDevice::RaidDevice)){
                 wdg = new RaidWidget(blkDev);
+            }else if (blkDev->is(BlockDevice::FilesystemDevice)){
+                wdg = new FilesystemWidget(blkDev);
             }else{
                 wdg = new QWidget();
             }

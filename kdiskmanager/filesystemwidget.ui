@@ -10,45 +10,41 @@
     <height>300</height>
    </rect>
   </property>
-  <widget class="QLabel" name="labelLineEditLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>50</y>
-     <width>64</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Label:</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-   </property>
-  </widget>
-  <widget class="KLineEdit" name="labelLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>139</x>
-     <y>50</y>
-     <width>117</width>
-     <height>28</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="KPushButton" name="changeLabelButton">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>50</y>
-     <width>124</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Change</string>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="labelLineEditLabel">
+     <property name="text">
+      <string>Label:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="KLineEdit" name="labelLineEdit"/>
+   </item>
+   <item row="0" column="2">
+    <widget class="KPushButton" name="changeLabelButton">
+     <property name="text">
+      <string>Change</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>257</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
  </widget>
  <customwidgets>
   <customwidget>
