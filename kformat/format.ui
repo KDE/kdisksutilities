@@ -33,6 +33,9 @@
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
+     <property name="buddy">
+      <cstring>deviceComboBox</cstring>
+     </property>
     </widget>
    </item>
    <item row="0" column="2" colspan="2">
@@ -55,6 +58,9 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>labelLineEdit</cstring>
      </property>
     </widget>
    </item>
@@ -84,6 +90,9 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>filesystemComboBox</cstring>
      </property>
     </widget>
    </item>
@@ -214,6 +223,9 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>eraseCheckBox</cstring>
      </property>
     </widget>
    </item>
