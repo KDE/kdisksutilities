@@ -32,6 +32,10 @@
 #include <KMessageBox>
 #include <KLocale>
 
+//Polkit-qt-1
+#include <polkit-qt-1/PolkitQt/Authority>
+#include <polkit-qt-1/PolkitQt/Subject>
+
 Format::Format()
 {
     m_util = 0;
@@ -40,6 +44,16 @@ Format::Format()
     ui.setupUi(mainWidget);
     setCentralWidget(mainWidget);
 
+    //PolkitQt::ActionButton *formatAction = new PolkitQt::ActionButton(ui.formatButton, "org.qt.policykit.examples.kick", this);
+    
+	PolkitQt::UnixProcessSubject subject(QCoreApplication::applicationPid());
+	switch (PolkitQt::Authority::instance()->checkAuthorizationSync("org.freedesktop.devicekit.disks.change", &subject, PolkitQt::Authority::AllowUserInteraction)) {
+	case PolkitQt::Authority::Yes:
+	kDebug() << ":D\n";
+	default:
+	kDebug() << ":(\n";
+	} 
+    
     m_devices = Solid::Device::listFromType(Solid::DeviceInterface::Block, QString());
     foreach (const Solid::Device &dev, m_devices){
         ui.deviceComboBox->addItem(dev.as<Solid::Block>()->device());
