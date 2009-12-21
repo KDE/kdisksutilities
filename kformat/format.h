@@ -42,7 +42,7 @@ class Format : public KMainWindow
         void deviceChanged(const QString &filesystem);
         void updateDescription(const QString &filesystem);
         void formatDisk();
-        void jobCompleted(bool success);
+        void formatCompleted(BlockDeviceStatus status);
 
     private:
         Ui::Format ui;

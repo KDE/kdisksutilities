@@ -89,7 +89,7 @@ void Format::formatDisk()
         if (dev.as<Solid::Block>()->device() == ui.deviceComboBox->currentText()){
             delete m_util;
             m_util = BlockDeviceManager::blockDevice(dev);
-            connect(m_util, SIGNAL(jobCompleted(bool)), this, SLOT(jobCompleted(bool)));
+            connect(m_util, SIGNAL(formatCompleted(BlockDeviceStatus)), this, SLOT(formatCompleted(BlockDeviceStatus)));
             setWidgetsEnabled(false);
             m_util->format(ui.filesystemComboBox->currentText(), QStringList() << "label=" + ui.labelLineEdit->text());
 
@@ -104,8 +104,18 @@ void Format::setWidgetsEnabled(bool enabled)
     ui.progressBar->setEnabled(!enabled);
 }
 
-void Format::jobCompleted(bool error)
-{
+void Format::formatCompleted(BlockDeviceStatus s)
+{   
+    switch (s){
+      case JobSuccess:
+            KMessageBox::information(this, i18n("Device formatted."));
+            break;
+
+      case PermissionsError:
+            KMessageBox::error(this, i18n("Permissions error."));
+            break;
+    }
+    
     setWidgetsEnabled(true);
 }
 

@@ -108,6 +108,10 @@ void BlockDevice::format(const QString &filesystem, const QStringList& params)
      
     if (reply.isError()){
        kDebug() << reply.error().message() << "\n";
+       
+       if (reply.error().message() == "Not Authorized"){
+            emit formatCompleted(PermissionsError);
+       }
     }
 }
 
@@ -163,6 +167,10 @@ QString BlockDevice::raidStatus()
 QString BlockDevice::parentRaid()                                                               
 {
     return d->m_deviceInterface->linuxMdComponentHolder().path();
+}
+
+void BlockDevice::jobChanged(bool, bool, const QString &, uint, double)
+{
 }
 
 #include "blockdevice.moc"

@@ -31,6 +31,14 @@ namespace Solid
 
 class BlockDeviceInterface;
 
+/* FIXME: Ugly Implementation */
+enum BlockDeviceStatus
+{
+    JobSuccess,
+    PermissionsError
+};
+/* End Of Ugly Implementation */
+
 class KDE_EXPORT BlockDevice : public QObject
 {
     Q_OBJECT
@@ -66,7 +74,8 @@ class KDE_EXPORT BlockDevice : public QObject
         
     signals:
         void jobCompleted(bool success);
-        
+        void formatCompleted(BlockDeviceStatus s);
+	
     private:
         BlockDevice(const QString &device);
         
@@ -80,6 +89,11 @@ class KDE_EXPORT BlockDevice : public QObject
 
         class Private;
         Private *d;
+
+  /* Ugly Implementation */
+  private slots:
+        void jobChanged(bool, bool, const QString &, uint, double);
+  /* End Of Ugly Implementation */
 };
 
 #endif
