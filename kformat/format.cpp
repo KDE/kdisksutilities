@@ -33,8 +33,8 @@
 #include <KLocale>
 
 //Polkit-qt-1
-#include <polkit-qt-1/PolkitQt/Authority>
-#include <polkit-qt-1/PolkitQt/Subject>
+#include <polkit-qt-1/PolkitQt1/Authority>
+#include <polkit-qt-1/PolkitQt1/Subject>
 
 Format::Format()
 {
@@ -44,11 +44,11 @@ Format::Format()
     ui.setupUi(mainWidget);
     setCentralWidget(mainWidget);
 
-    //PolkitQt::ActionButton *formatAction = new PolkitQt::ActionButton(ui.formatButton, "org.qt.policykit.examples.kick", this);
+    //PolkitQt1::ActionButton *formatAction = new PolkitQt1::ActionButton(ui.formatButton, "org.qt.policykit.examples.kick", this);
     
-	PolkitQt::UnixProcessSubject subject(QCoreApplication::applicationPid());
-	switch (PolkitQt::Authority::instance()->checkAuthorizationSync("org.freedesktop.devicekit.disks.change", &subject, PolkitQt::Authority::AllowUserInteraction)) {
-	case PolkitQt::Authority::Yes:
+	PolkitQt1::UnixProcessSubject subject(QCoreApplication::applicationPid());
+	switch (PolkitQt1::Authority::instance()->checkAuthorizationSync("org.freedesktop.devicekit.disks.change", &subject, PolkitQt1::Authority::AllowUserInteraction)) {
+	case PolkitQt1::Authority::Yes:
 	kDebug() << ":D\n";
 	default:
 	kDebug() << ":(\n";
