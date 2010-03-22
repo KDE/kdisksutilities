@@ -1,6 +1,7 @@
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 set(KDE_MIN_VERSION 4.2.0)
 find_package(KDE4 REQUIRED)
+find_package(PolkitQt-1)
 
 include (KDE4Defaults)
 include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
