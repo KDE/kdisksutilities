@@ -5,6 +5,10 @@ find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} )
 
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../libkdiskmanager)
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libkdiskmanager)
+endif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../libkdiskmanager)
+
 
 set(disksdaemon_SRCS disksdaemon.cpp)
 
