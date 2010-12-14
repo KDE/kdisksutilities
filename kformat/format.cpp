@@ -47,7 +47,7 @@ Format::Format()
     //PolkitQt1::ActionButton *formatAction = new PolkitQt1::ActionButton(ui.formatButton, "org.qt.policykit.examples.kick", this);
     
 	PolkitQt1::UnixProcessSubject subject(QCoreApplication::applicationPid());
-	switch (PolkitQt1::Authority::instance()->checkAuthorizationSync("org.freedesktop.devicekit.disks.change", &subject, PolkitQt1::Authority::AllowUserInteraction)) {
+	switch (PolkitQt1::Authority::instance()->checkAuthorizationSync("org.freedesktop.devicekit.disks.change", subject, PolkitQt1::Authority::AllowUserInteraction)) {
 	case PolkitQt1::Authority::Yes:
 	kDebug() << ":D\n";
 	default:
