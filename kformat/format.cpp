@@ -33,8 +33,8 @@
 #include <KLocale>
 
 //Polkit-qt-1
-#include <polkit-qt-1/PolkitQt1/Authority>
-#include <polkit-qt-1/PolkitQt1/Subject>
+//#include <polkit-qt-1/PolkitQt1/Authority>
+//#include <polkit-qt-1/PolkitQt1/Subject>
 
 Format::Format()
 {
@@ -46,13 +46,13 @@ Format::Format()
 
     //PolkitQt1::ActionButton *formatAction = new PolkitQt1::ActionButton(ui.formatButton, "org.qt.policykit.examples.kick", this);
     
-	PolkitQt1::UnixProcessSubject subject(QCoreApplication::applicationPid());
-	switch (PolkitQt1::Authority::instance()->checkAuthorizationSync("org.freedesktop.devicekit.disks.change", subject, PolkitQt1::Authority::AllowUserInteraction)) {
-	case PolkitQt1::Authority::Yes:
-	kDebug() << ":D\n";
-	default:
-	kDebug() << ":(\n";
-	} 
+	//PolkitQt1::UnixProcessSubject subject(QCoreApplication::applicationPid());
+	//switch (PolkitQt1::Authority::instance()->checkAuthorizationSync("org.freedesktop.devicekit.disks.change", subject, PolkitQt1::Authority::AllowUserInteraction)) {
+	//case PolkitQt1::Authority::Yes:
+	//kDebug() << ":D\n";
+	//default:
+	//kDebug() << ":(\n";
+	//} 
     
     m_devices = Solid::Device::listFromType(Solid::DeviceInterface::Block, QString());
     foreach (const Solid::Device &dev, m_devices){
@@ -103,7 +103,7 @@ void Format::formatDisk()
         if (dev.as<Solid::Block>()->device() == ui.deviceComboBox->currentText()){
             delete m_util;
             m_util = BlockDeviceManager::blockDevice(dev);
-            connect(m_util, SIGNAL(formatCompleted(BlockDeviceStatus)), this, SLOT(formatCompleted(BlockDeviceStatus)));
+            //connect(m_util, SIGNAL(formatCompleted(BlockDeviceStatus)), this, SLOT(formatCompleted(BlockDeviceStatus)));
             setWidgetsEnabled(false);
             m_util->format(ui.filesystemComboBox->currentText(), QStringList() << "label=" + ui.labelLineEdit->text());
 
@@ -118,7 +118,7 @@ void Format::setWidgetsEnabled(bool enabled)
     ui.progressBar->setEnabled(!enabled);
 }
 
-void Format::formatCompleted(BlockDeviceStatus s)
+/*void Format::formatCompleted(BlockDeviceStatus s)
 {   
     switch (s){
       case JobSuccess:
@@ -131,6 +131,6 @@ void Format::formatCompleted(BlockDeviceStatus s)
     }
     
     setWidgetsEnabled(true);
-}
+}*/
 
 #include "format.moc"
