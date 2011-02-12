@@ -8,36 +8,6 @@ X-KDE-Kded-load-on-demand=false
 X-KDE-Kded-phase=1
 
 Name=DisksDaemon
-Name[ca]=DisksDaemon
-Name[ca@valencia]=DisksDaemon
-Name[de]=Laufwerkdienst
-Name[en_GB]=DisksDæmon
-Name[es]=DisksDaemon
-Name[fi]=DisksDaemon
-Name[ja]=DisksDaemon
-Name[nds]=DisksDaemon
-Name[pa]=ਡਿਸਕਡੈਮਨ
-Name[pt]=Servidor de Discos
-Name[pt_BR]=DisksDaemon
-Name[sv]=Diskdemon
-Name[tr]=Disk Servisi
-Name[uk]=Фонова служба дисків
-Name[x-test]=xxDisksDaemonxx
 
 Comment=Disks Daemon
-Comment[ca]=Dimoni de discs
-Comment[ca@valencia]=Dimoni de discs
-Comment[de]=Laufwerkdienst
-Comment[en_GB]=Disks Dæmon
-Comment[es]=Demonio de discos
-Comment[fi]=Levypalvelu
-Comment[ja]=Disks Daemon
-Comment[nds]=Fastplaat-Dämoon
-Comment[pa]=ਡਿਸਕ ਡੈਮਨ
-Comment[pt]=Servidor de Discos
-Comment[pt_BR]=Daemon de discos
-Comment[sv]=Diskdemon
-Comment[tr]=Disk Servisi
-Comment[uk]=Фонова служба дисків
-Comment[x-test]=xxDisks Daemonxx
 
