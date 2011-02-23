@@ -9,6 +9,7 @@ X-KDE-Kded-phase=1
 
 Name=DisksDaemon
 Name[cs]=Démon disků
+Name[de]=Laufwerkdienst
 Name[es]=DisksDaemon
 Name[nds]=DisksDämoon
 Name[pt]=Servidor de Discos
@@ -19,6 +20,7 @@ Name[x-test]=xxDisksDaemonxx
 
 Comment=Disks Daemon
 Comment[cs]=Démon disků
+Comment[de]=Laufwerkdienst
 Comment[es]=Demonio de discos
 Comment[nds]=Fastplaat-Dämoon
 Comment[pt]=Servidor de Discos
