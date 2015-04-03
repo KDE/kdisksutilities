@@ -8,6 +8,7 @@ X-KDE-Kded-load-on-demand=false
 X-KDE-Kded-phase=1
 
 Name=DisksDaemon
+Name[ast]=DisksDaemon
 Name[bs]=DisksDaemon
 Name[ca]=DisksDaemon
 Name[ca@valencia]=DisksDaemon
